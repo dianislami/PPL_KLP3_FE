@@ -1,0 +1,175 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* PHONE */
+.phone {
+  max-width: 390px;
+  margin: auto;
+  min-height: 100dvh;
+  background: #9ea657;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 68vh;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+  overflow: hidden;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transform: scale(1.2);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.6)
+  );
+}
+
+.hero-content {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  color: white;
+}
+
+.brand {
+  font-style: italic;
+  font-size: 18px;
+}
+
+.title {
+  position: absolute;
+  bottom: 60px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* BOTTOM */
+.bottom {
+  margin-top: -30px;
+  padding: 20px;
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* BASE CARD */
+.card,
+.img-card {
+  width: 140px;
+  height: 160px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* TEXT CARD */
+.card {
+  padding: 12px;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+/* COLORS */
+.yellow {
+  background: #ffe14a;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+  color: black;
+}
+
+/* DARK CARD */
+.dark {
+  background: #111;
+  color: white;
+}
+
+/* DARK CARD TEXT FIX */
+.dark p {
+  color: #ffe14a; /* teks bawah kuning */
+}
+
+/* CENTER IMAGE */
+.img-card {
+  transform: scale(1.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+.img-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* TILT EFFECT */
+.tilt-left {
+  transform: rotate(-8deg);
+}
+
+.tilt-right {
+  transform: rotate(8deg);
+}
+
+/* LABEL */
+.label {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid black;
+  font-size: 10px;
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+/* LABEL WHITE (DARK CARD) */
+.label.white {
+  border: 1px solid white;
+  color: white;
+}
+
+/* YELLOW CARD TEXT (OPTIONAL SAFE OVERRIDE) */
+.yellow p {
+  color: black;
+}
+
+/* CTA */
+.cta {
+  width: 100%;
+  margin-top: 25px;
+  padding: 16px;
+  border-radius: 30px;
+  border: none;
+  background: black;
+  color: white;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
