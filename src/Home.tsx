@@ -10,7 +10,7 @@ export default function Home() {
       {/* HERO */}
       <div className="hero">
         <img
-          src="/src/assets/Landingpage.jpg"
+          src="/src/assets/images/Landingpage.jpg"
           className="hero-img"
           alt="hero"
         />
@@ -37,7 +37,7 @@ export default function Home() {
 
           {/* CENTER IMAGE */}
           <div className="img-card center">
-            <img src="/src/assets/card1.jpg" alt="center" />
+            <img src="/src/assets/images/card1.jpg" alt="center" />
           </div>
 
           {/* RIGHT CARD */}
