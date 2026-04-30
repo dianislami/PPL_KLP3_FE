@@ -11,6 +11,7 @@ import DaftarPanen from "./pages/pedagang/DaftarPanen";
 import PemulihanPanen from "./pages/petani/PemulihanPanen";
 import StatusPengiriman from "./pages/petani/StatusPengiriman";
 import HasilMatching from "./pages/pedagang/HasilMatching";
+import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
       <Route path="/input-kebutuhan" element={<InputKebutuhan />} />
       <Route path="/daftar-panen" element={<DaftarPanen />} /> 
       <Route path="/hasil-matching" element={<HasilMatching />} /> 
+      <Route path="/status-pengiriman-pedagang" element={<StatusPengirimanPedagang />} />
     </Routes>
   );
 }
