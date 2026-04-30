@@ -6,7 +6,7 @@ import DashboardPetani from "./pages/petani/DashboardPetani";
 import TambahPanen from "./pages/petani/TambahPanen";
 import RiwayatPanen from "./pages/petani/RiwayatPanen";
 import InputKebutuhan from "./pages/pedagang/InputKebutuhan";
-
+import DaftarPanen from "./pages/pedagang/DaftarPanen";
 
 export default function App() {
   return (
@@ -17,8 +17,8 @@ export default function App() {
       <Route path="/dashboard-petani" element={<DashboardPetani />} />
       <Route path="/tambah-panen" element={<TambahPanen />} />
       <Route path="/riwayat-panen" element={<RiwayatPanen />} />
-      <Route path="/input" element={<InputKebutuhan />} />
-     
+      <Route path="/input-kebutuhan" element={<InputKebutuhan />} />
+      <Route path="/daftar-panen" element={<DaftarPanen />} /> 
     </Routes>
   );
 }
