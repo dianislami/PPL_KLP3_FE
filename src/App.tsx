@@ -12,6 +12,8 @@ import PemulihanPanen from "./pages/petani/PemulihanPanen";
 import StatusPengiriman from "./pages/petani/StatusPengiriman";
 import DetailArtikel from "./pages/petani/DetailArtikel";
 import Chat from "./pages/petani/Chat";
+import HasilMatching from "./pages/pedagang/HasilMatching";
+import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang";
 
 export default function App() {
   return (
@@ -29,6 +31,8 @@ export default function App() {
       <Route path="/daftar-panen" element={<DaftarPanen />} /> 
       <Route path="/detail-artikel/:id" element={<DetailArtikel />} />
       <Route path="/chat/:nama?" element={<Chat />} />
+      <Route path="/hasil-matching" element={<HasilMatching />} /> 
+      <Route path="/status-pengiriman-pedagang" element={<StatusPengirimanPedagang />} />
     </Routes>
   );
 }
