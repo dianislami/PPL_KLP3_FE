@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'poppins': ['Poppins', 'sans-serif'],
+      },
       colors: {
         'smart-green': '#a3a551',
         'smart-dark': '#6b8a3a',

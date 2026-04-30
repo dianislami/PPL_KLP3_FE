@@ -30,7 +30,6 @@ export default function TambahPanen() {
           </div>
           <div className="flex gap-2 items-center">
             <span className="text-xs bg-white/20 rounded-full px-3 py-1">Riwayat</span>
-            <span className="text-xs bg-white/20 rounded-full px-3 py-1">Peta</span>
           </div>
         </div>
       </div>
@@ -153,8 +152,8 @@ export default function TambahPanen() {
         >
           Simpan
         </button>
-        <p className="text-center text-xs text-gray-400 mb-1">Data Anda akan divalidasi oleh sistem</p>
-        <p className="text-center text-xs text-[#7a8c2e] underline cursor-pointer">Klik untuk bantuan</p>
+
+        <p className="text-center text-xs text-[#7a8c2e] underline cursor-pointer">Lihat panduan kualitas panen</p>
       </div>
 
       <BottomNav role="petani" />

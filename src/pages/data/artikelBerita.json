@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1",
+    "judul": "Harga Cabai Merah Naik 30% Jelang Musim Kemarau",
+    "ringkasan": "Harga cabai merah di pasar tradisional Banda Aceh mengalami kenaikan signifikan akibat berkurangnya pasokan dari petani lokal menjelang musim kemarau panjang.",
+    "isi": "Harga cabai merah di sejumlah pasar tradisional di Banda Aceh mengalami kenaikan hingga 30 persen dalam dua pekan terakhir. Kenaikan ini dipicu oleh berkurangnya pasokan dari sentra produksi di Aceh Besar dan Pidie akibat curah hujan yang tidak menentu.\n\nMenurut data Dinas Pertanian Aceh, produksi cabai merah pada kuartal pertama 2026 turun sekitar 20 persen dibanding periode yang sama tahun lalu. Para petani menyebutkan serangan hama dan perubahan iklim menjadi faktor utama penurunan produksi.\n\nPemerintah daerah tengah mengupayakan distribusi cabai dari daerah sentra produksi lain seperti Bireuen dan Aceh Tengah untuk menstabilkan harga. Petani diimbau untuk segera melakukan penanaman kembali menggunakan varietas tahan kekeringan yang telah disediakan oleh dinas pertanian setempat.",
+    "kategori": "Harga Pasar",
+    "tanggal": "28 April 2026",
+    "emoji": "🌶️",
+    "warna": "bg-red-100"
+  },
+  {
+    "id": "2",
+    "judul": "Teknologi Sensor Tanah Bantu Petani Optimalkan Irigasi",
+    "ringkasan": "Penggunaan sensor kelembaban tanah berbasis IoT kini mulai diadopsi petani modern di Aceh untuk menghemat air hingga 40% sekaligus meningkatkan hasil panen.",
+    "isi": "Sejumlah petani muda di Kabupaten Aceh Besar mulai mengadopsi teknologi sensor tanah berbasis Internet of Things (IoT) untuk mengoptimalkan sistem irigasi mereka. Teknologi ini memungkinkan petani memantau kondisi kelembaban tanah secara real-time melalui smartphone.\n\nProgram percontohan yang dijalankan bersama Universitas Syiah Kuala menunjukkan hasil yang menjanjikan. Petani yang menggunakan sensor ini berhasil menghemat penggunaan air hingga 40 persen sekaligus meningkatkan hasil panen rata-rata 15 persen.\n\nBiaya pemasangan satu unit sensor berkisar antara Rp 800 ribu hingga Rp 1,5 juta, dan sudah dapat diakses melalui program subsidi alat pertanian dari Kementerian Pertanian. Petani yang berminat dapat mendaftarkan diri melalui penyuluh pertanian setempat.",
+    "kategori": "Teknologi",
+    "tanggal": "27 April 2026",
+    "emoji": "📡",
+    "warna": "bg-sky-100"
+  },
+  {
+    "id": "3",
+    "judul": "Cara Tepat Panen Tomat Agar Tahan Lama di Perjalanan",
+    "ringkasan": "Teknik pemanenan yang benar sangat menentukan kualitas tomat hingga ke tangan konsumen. Pelajari waktu terbaik dan metode panen yang direkomendasikan para ahli.",
+    "isi": "Kualitas tomat yang sampai ke konsumen sangat bergantung pada cara dan waktu pemanenannya. Para ahli agronomi merekomendasikan pemanenan tomat dilakukan pada pagi hari sebelum pukul 09.00 WIB ketika suhu masih rendah untuk mengurangi stres pada buah.\n\nTomat sebaiknya dipanen dalam kondisi matang hijau hingga setengah matang jika akan melewati distribusi jarak jauh. Pemanenan dilakukan dengan memotong tangkai buah menggunakan gunting bersih, bukan dengan menarik langsung yang dapat melukai buah.\n\nSetelah panen, tomat sebaiknya tidak langsung terpapar sinar matahari langsung. Simpan di tempat teduh dengan sirkulasi udara baik. Hindari penumpukan lebih dari tiga lapis untuk mencegah memar dan kerusakan. Dengan penanganan pasca panen yang tepat, tomat dapat bertahan 7-10 hari dalam kondisi optimal.",
+    "kategori": "Tips Bertani",
+    "tanggal": "26 April 2026",
+    "emoji": "🍅",
+    "warna": "bg-red-100"
+  },
+  {
+    "id": "4",
+    "judul": "Pupuk Organik Cair dari Limbah Panen Jadi Peluang Usaha",
+    "ringkasan": "Limbah sisa panen seperti daun, batang, dan kulit buah dapat diolah menjadi pupuk organik cair bernilai jual tinggi. Begini cara membuatnya.",
+    "isi": "Limbah pertanian yang selama ini hanya menjadi masalah bagi petani ternyata bisa diubah menjadi sumber penghasilan tambahan. Pupuk organik cair (POC) dari fermentasi sisa panen kini semakin diminati karena harga pupuk kimia yang terus naik.\n\nProses pembuatan POC relatif sederhana. Limbah organik seperti daun, batang tanaman, dan kulit buah dicampur dengan air, gula merah, dan bakteri fermentatif seperti EM4. Campuran difermentasi selama 14 hari dalam wadah tertutup sebelum dapat digunakan.\n\nSatu liter POC dapat dijual seharga Rp 15-25 ribu di pasaran. Kelompok tani di Kecamatan Kuta Malaka telah berhasil menjual rata-rata 200 liter POC per bulan, menghasilkan pendapatan tambahan hingga Rp 4 juta per bulan untuk kelompok. Program pelatihan pembuatan POC tersedia melalui Balai Penyuluhan Pertanian setempat.",
+    "kategori": "Peluang Usaha",
+    "tanggal": "25 April 2026",
+    "emoji": "🌿",
+    "warna": "bg-green-100"
+  },
+  {
+    "id": "5",
+    "judul": "Prakiraan Cuaca: Hujan Deras Berpotensi Serang Aceh Pekan Ini",
+    "ringkasan": "BMKG merilis peringatan dini cuaca ekstrem untuk wilayah Aceh dengan potensi hujan deras disertai angin kencang. Petani diminta waspada terhadap ancaman banjir lahan.",
+    "isi": "Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) mengeluarkan peringatan dini cuaca untuk wilayah Provinsi Aceh pada periode 29 April hingga 5 Mei 2026. Wilayah pesisir barat dan utara Aceh berpotensi mengalami hujan dengan intensitas sedang hingga lebat disertai angin kencang.\n\nPetani di daerah dataran rendah diminta untuk mewaspadai potensi banjir dan genangan air di lahan pertanian. Khusus petani sayuran dan tanaman semusim, disarankan untuk segera memanen hasil yang sudah siap agar tidak rusak terkena hujan lebat.\n\nDinas Pertanian Aceh juga menghimbau petani untuk memastikan saluran drainase lahan dalam kondisi bersih dan lancar. Penyemprotan fungisida preventif juga dianjurkan untuk mengantisipasi serangan penyakit jamur yang biasa meningkat pada musim hujan.",
+    "kategori": "Cuaca",
+    "tanggal": "29 April 2026",
+    "emoji": "⛈️",
+    "warna": "bg-gray-100"
+  },
+  {
+    "id": "6",
+    "judul": "Subsidi Benih Padi Varietas Unggul Dibuka Hingga Mei 2026",
+    "ringkasan": "Pemerintah membuka pendaftaran subsidi benih padi varietas Inpari-32 dan Ciherang untuk musim tanam kedua. Petani bisa mendapat hingga 25 kg benih gratis per hektar.",
+    "isi": "Kementerian Pertanian RI kembali membuka program subsidi benih padi untuk musim tanam April-September 2026. Program ini menyasar petani padi di seluruh Aceh dengan kuota total 2.000 ton benih bersubsidi untuk provinsi ini.\n\nVarietas yang tersedia dalam program subsidi ini adalah Inpari-32 Inbrida, Ciherang, dan Mekongga — tiga varietas yang terbukti adaptif terhadap kondisi iklim Aceh dan tahan terhadap hama wereng batang coklat. Setiap petani berhak mendapatkan maksimal 25 kg benih per hektar lahan yang dimiliki.\n\nPendaftaran dilakukan melalui Kelompok Tani atau langsung ke Balai Penyuluhan Pertanian (BPP) kecamatan setempat dengan membawa fotokopi KTP, kartu tani, dan bukti kepemilikan/penggarapan lahan. Batas pendaftaran adalah 31 Mei 2026. Prioritas diberikan kepada petani yang belum pernah mendapatkan subsidi benih dalam dua musim terakhir.",
+    "kategori": "Program Pemerintah",
+    "tanggal": "24 April 2026",
+    "emoji": "🌾",
+    "warna": "bg-yellow-100"
+  },
+  {
+    "id": "7",
+    "judul": "Ekspor Kopi Gayo Capai Rekor Tertinggi di Kuartal Pertama 2026",
+    "ringkasan": "Kopi Gayo asal Aceh Tengah mencatatkan nilai ekspor tertinggi sepanjang sejarah pada Q1 2026 dengan total 4.200 ton senilai USD 28 juta.",
+    "isi": "Kopi arabika Gayo dari dataran tinggi Aceh Tengah dan Bener Meriah mencatatkan rekor ekspor baru pada kuartal pertama 2026. Total ekspor mencapai 4.200 ton senilai USD 28 juta, meningkat 22 persen dibanding periode yang sama tahun 2025.\n\nTujuan ekspor utama meliputi Amerika Serikat, Jerman, Belanda, Jepang, dan Taiwan. Meningkatnya permintaan kopi specialty dari pasar Eropa dan Asia menjadi pendorong utama pertumbuhan ini. Sertifikasi organik dan fairtrade yang dimiliki sebagian besar koperasi kopi Gayo turut meningkatkan daya saing di pasar internasional.\n\nKeberhasilan ini tidak terlepas dari program pendampingan Good Agricultural Practices (GAP) yang telah berjalan selama tiga tahun terakhir, melibatkan lebih dari 12.000 petani kopi. Pemerintah Aceh menargetkan nilai ekspor kopi Gayo mencapai USD 120 juta sepanjang tahun 2026.",
+    "kategori": "Pasar Ekspor",
+    "tanggal": "23 April 2026",
+    "emoji": "☕",
+    "warna": "bg-brown-100"
+  }
+]

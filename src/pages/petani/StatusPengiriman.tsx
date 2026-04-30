@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 type StepStatus = 'done' | 'active' | 'pending';
 
@@ -8,6 +8,12 @@ interface Step {
   title: string;
   desc: string | React.ReactNode;
 }
+
+const ICONS = {
+  delivery: 'mdi:truck-fast-outline',
+  map: 'mdi:map-outline',
+  chat: 'mdi:chat'
+};
 
 const steps: Step[] = [
   {
@@ -67,7 +73,6 @@ function StepIcon({ status }: { status: StepStatus }) {
 }
 
 export default function StatusPengiriman() {
-  const navigate = useNavigate();
 
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
@@ -142,10 +147,10 @@ export default function StatusPengiriman() {
                             Menuju Gudang Pusat,<br />Banda Aceh
                           </p>
                         </div>
-                        <span className="text-4xl mt-1">🗺️</span>
+                        <Icon icon={ICONS.map} className="text-4xl text-[#7a8c2e]" />
                       </div>
                       <div className="flex items-center gap-3 mt-3 pt-3 border-t border-[#d8e8a0]">
-                        <span className="text-2xl">🚚</span>
+                        <Icon icon={ICONS.delivery} className="text-4xl text-[#7a8c2e]" />
                         <div>
                           <p className="text-sm font-semibold text-gray-800">Pickup - BL 1234 APT</p>
                           <p className="text-xs text-gray-500">Driver: Budi Sudarsono</p>
@@ -180,19 +185,11 @@ export default function StatusPengiriman() {
       {/* Bottom Action Buttons */}
       <div className="fixed bottom-0 left-0 right-0 bg-white px-5 pb-6 pt-3 flex gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
         <button
-          onClick={() => navigate('/peta')}
-          className="flex-1 bg-[#8aaa2e] text-white font-semibold text-sm py-4 rounded-full"
-        >
-          Lihat di Peta
-        </button>
-        <button
-          onClick={() => {}}
+          onClick={() => { window.location.href = '/chat/:nama?' }}
           className="flex-1 bg-[#6a8a1e] text-white font-semibold text-sm py-4 rounded-full flex items-center justify-center gap-2"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.01l-2.21 2.2z" fill="white"/>
-          </svg>
-          Hubungi
+          <Icon icon={ICONS.chat} className="text-2xl" />
+          Hubungi Penjual
         </button>
       </div>
     </div>

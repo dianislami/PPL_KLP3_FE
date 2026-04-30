@@ -1,11 +1,34 @@
 import { useState } from 'react';
 import BottomNav from '../../components/layout/BottomNav';
 import { useNavigate } from 'react-router-dom';
+import artikelData from '../data/artikelBerita.json';
+import { Icon } from '@iconify/react';
+
+interface Artikel {
+  id: string;
+  judul: string;
+  ringkasan: string;
+  isi: string;
+  kategori: string;
+  tanggal: string;
+  emoji: string;
+  warna: string;
+}
+
+const ICONS = {
+  recovery: 'mdi:recycle',
+  delivery: 'mdi:truck-fast-outline',
+  history: 'mdi:clipboard-clock-outline',
+  search: 'mdi:magnify',
+};
+
+const artikel = artikelData as Artikel[];
 
 export default function DashboardPetani() {
   const [location] = useState('Banda Aceh');
   const [temperature] = useState('32');
   const navigate = useNavigate();
+
   const handleInputPanen = () => navigate('/tambah-panen');
 
   return (
@@ -14,8 +37,8 @@ export default function DashboardPetani() {
       <div className="px-6 py-6 text-white">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-4xl font-bold">Hallo, Farmers</h1>
-            <p className="text-sm opacity-90">Minggu, 11 April 2026</p>
+            <h1 className="text-3xl font-bold">Hallo, Farmers</h1>
+            <p className="text-sm opacity-90">Kamis, 30 April 2026</p>
           </div>
           <div className="w-11 h-11 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-xl">
             👨‍🌾
@@ -24,17 +47,18 @@ export default function DashboardPetani() {
 
         {/* Search Bar */}
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+          <Icon icon={ICONS.search} className="text-xl absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70" />
           <input
             type="text"
             placeholder="Cari disini"
-            className="w-full pl-12 pr-4 py-3 bg-white/30 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="w-full pl-12 pr-4 py-2 bg-white/30 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         </div>
       </div>
 
       {/* Content */}
       <div className="flex-1 px-6 pb-24 flex flex-col overflow-y-auto bg-white rounded-t-3xl mt-4">
+
         {/* Location & Weather Card */}
         <div className="bg-white rounded-2xl p-6 mb-6 shadow-md -mt-6">
           <div className="flex justify-between items-start mb-4">
@@ -98,27 +122,80 @@ export default function DashboardPetani() {
 
         {/* Info Cards */}
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#e8efd6] border-2 border-[#a3a551] rounded-2xl p-4 text-center">
-            <p className="font-bold text-gray-800 text-sm">Riwayat<br />Panen</p>
-          </div>
-          <div className="bg-[#e8efd6] border-2 border-[#a3a551] rounded-2xl p-4 text-center">
-            <p className="font-bold text-gray-800 text-sm">Kelola<br />Recovery</p>
-          </div>
-          <div className="bg-[#e8efd6] border-2 border-[#a3a551] rounded-2xl p-4 text-center">
-            <p className="font-bold text-gray-800 text-sm">Status<br />Distribusi</p>
-          </div>
+          <button
+            onClick={() => navigate('/riwayat-panen')}
+            className="bg-[#e8efd6] border-2 border-[#7a8c2e] rounded-2xl p-4 text-center active:scale-95 flex flex-col items-center transition-all"
+          >
+            <Icon icon={ICONS.history} className="text-3xl mb-2 text-[#7a8c2e]" />
+            <p className="font-bold text-gray-800 text-xs">Riwayat Panen</p>
+          </button>
+          <button
+            onClick={() => navigate('/pemulihan-panen')}
+            className="bg-[#e8efd6] border-2 border-[#7a8c2e] rounded-2xl p-4 text-center active:scale-95 flex flex-col items-center transition-all"
+          >
+            <Icon icon={ICONS.recovery} className="text-3xl mb-2 text-[#7a8c2e]" />
+            <p className="font-bold text-gray-800 text-xs">Kelola Recovery</p>
+          </button>
+          <button
+            onClick={() => navigate('/status-pengiriman')}
+            className="bg-[#e8efd6] border-2 border-[#7a8c2e] rounded-2xl p-4 text-center active:scale-95 flex flex-col items-center transition-all"
+          >
+            <Icon icon={ICONS.delivery} className="text-3xl mb-2 text-[#7a8c2e]" />
+            <p className="font-bold text-gray-800 text-xs">Status Distribusi</p>
+          </button>
         </div>
 
-        {/* News & Recommendations */}
+        {/* Berita & Rekomendasi */}
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Berita & Rekomendasi</h2>
-          <div className="bg-[#dde8c5] rounded-2xl p-4 flex gap-4">
-            <div className="w-20 h-20 bg-gray-300 rounded-lg flex-shrink-0"></div>
-            <div className="flex-1">
-              <p className="text-sm text-gray-800">
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-              </p>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Berita & Rekomendasi</h2>
+            <span className="text-xs text-[#7a8c2e] font-semibold">{artikel.length} artikel</span>
+          </div>
+
+          {/* Artikel Featured (pertama) */}
+          <button
+            onClick={() => navigate(`/detail-artikel/${artikel[0].id}`)}
+            className={`w-full ${artikel[0].warna} rounded-2xl p-4 flex gap-4 mb-3 text-left active:scale-95 transition-all`}
+          >
+            <div className="w-20 h-20 rounded-xl bg-white/60 flex items-center justify-center flex-shrink-0 text-4xl">
+              {artikel[0].emoji}
             </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/60 text-gray-600 mb-1.5 inline-block">
+                {artikel[0].kategori}
+              </span>
+              <p className="text-sm font-bold text-gray-800 leading-snug line-clamp-2 mb-1">
+                {artikel[0].judul}
+              </p>
+              <p className="text-xs text-gray-500 line-clamp-2">{artikel[0].ringkasan}</p>
+              <p className="text-[10px] text-gray-400 mt-1">{artikel[0].tanggal}</p>
+            </div>
+          </button>
+
+          {/* Artikel list (sisanya) */}
+          <div className="flex flex-col gap-3">
+            {artikel.slice(1).map(item => (
+              <button
+                key={item.id}
+                onClick={() => navigate(`/detail-artikel/${item.id}`)}
+                className="w-full bg-white border border-gray-100 rounded-2xl p-3 flex gap-3 text-left active:scale-95 transition-all shadow-sm"
+              >
+                <div className={`w-14 h-14 rounded-xl ${item.warna} flex items-center justify-center flex-shrink-0 text-3xl`}>
+                  {item.emoji}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#eaf0d8] text-[#5a6e1a]">
+                      {item.kategori}
+                    </span>
+                    <span className="text-[10px] text-gray-400">{item.tanggal}</span>
+                  </div>
+                  <p className="text-sm font-semibold text-gray-800 leading-snug line-clamp-2">
+                    {item.judul}
+                  </p>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       </div>
