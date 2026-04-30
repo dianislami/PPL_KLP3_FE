@@ -1,42 +1,53 @@
-import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 interface BottomNavProps {
-  activeTab?: string;
-  onTabChange?: (tab: string) => void;
+  role?: 'petani' | 'pedagang';
 }
 
-export default function BottomNav({ activeTab = 'home', onTabChange }: BottomNavProps) {
-  const [active, setActive] = useState(activeTab);
+export default function BottomNav({ role = 'petani' }: BottomNavProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleTabChange = (tab: string) => {
-    setActive(tab);
-    if (onTabChange) {
-      onTabChange(tab);
-    }
-  };
-
-  const navItems = [
-    { id: 'home', label: 'Beranda', icon: '🏠' },
-    { id: 'add', label: 'Tambah', icon: '➕' },
-    { id: 'community', label: 'Komunitas', icon: '👥' },
-    { id: 'history', label: 'Riwayat', icon: '🕐' },
-    { id: 'profile', label: 'Profil', icon: '✅' },
+  const petaniNavItems = [
+    { id: 'home', label: 'Beranda', icon: 'mdi:home', path: '/dashboard-petani' },
+    { id: 'add', label: 'Tambah', icon: 'mdi:plus-circle', path: '/tambah-panen' },
+    { id: 'recovery', label: 'Pemulihan', icon: 'mdi:leaf', path: '/pemulihan-panen' },
+    { id: 'history', label: 'Riwayat', icon: 'mdi:history', path: '/riwayat-panen' },
+    { id: 'profile', label: 'Profil', icon: 'mdi:account', path: '/profil-petani' },
   ];
 
+  const pedagangNavItems = [
+    { id: 'home', label: 'Beranda', icon: 'mdi:home', path: '/dashboard-pedagang' },
+    { id: 'daftar', label: 'Daftar Panen', icon: 'mdi:list', path: '/daftar-panen' },
+    { id: 'kebutuhan', label: 'Kebutuhan', icon: 'mdi:plus-circle', path: '/input-kebutuhan' },
+    { id: 'matching', label: 'Matching', icon: 'mdi:link', path: '/hasil-matching' },
+  ];
+
+  const navItems = role === 'petani' ? petaniNavItems : pedagangNavItems;
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl px-4 py-3 flex justify-around items-center shadow-2xl">
+    <div className="fixed bottom-1 left-1 right-1 bg-black rounded-full px-2 py-2 flex justify-between items-center shadow-2xl">
       {navItems.map((item) => (
         <button
           key={item.id}
-          onClick={() => handleTabChange(item.id)}
-          className={`flex flex-col items-center gap-1 transition-colors duration-200 ${
-            active === item.id
-              ? 'text-white'
-              : 'text-gray-400 hover:text-white'
+          onClick={() => handleNavigation(item.path)}
+          className={`flex flex-col items-center gap-[0.01rem] transition-colors duration-200 ${
+            isActive(item.path)
+              ? 'text-white bg-[#7a8c2e] rounded-3xl px-5 py-1'
+              : 'text-gray-400 bg-gray-700 rounded-full p-3 hover:text-white'
           }`}
         >
-          <span className="text-2xl">{item.icon}</span>
-          <span className={`text-xs font-semibold ${active === item.id ? 'block' : 'hidden'}`}>
+          <Icon icon={item.icon} width="24" height="24" />
+          <span className={`text-xs font-semibold ${isActive(item.path) ? 'block' : 'hidden'}`}>
             {item.label}
           </span>
         </button>

@@ -8,10 +8,6 @@ export default function DashboardPetani() {
   const navigate = useNavigate();
   const handleInputPanen = () => navigate('/tambah-panen');
 
-  const handleNavChange = (tab: string) => {
-    console.log('Navigate to:', tab);
-  };
-
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
       {/* Header */}
@@ -128,7 +124,7 @@ export default function DashboardPetani() {
       </div>
 
       {/* Bottom Navigation */}
-      <BottomNav activeTab="home" onTabChange={handleNavChange} />
+      <BottomNav role="petani" />
     </div>
   );
 }

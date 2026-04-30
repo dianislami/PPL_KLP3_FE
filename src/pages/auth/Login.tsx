@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FormEvent } from 'react';
+import { Icon } from '@iconify/react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,158 +12,174 @@ export default function Login() {
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Login:', { userType, email, password });
-    
-    if (userType === 'petani') {
-      navigate('/dashboard-petani');
-    } else if (userType === 'pedagang') {
-      navigate('/dashboard-pedagang');
-    } else if (userType === 'admin') {
-      navigate('/dashboard-admin');
-    }
+    if (userType === 'petani') navigate('/dashboard-petani');
+    else if (userType === 'pedagang') navigate('/dashboard-pedagang');
+    else if (userType === 'admin') navigate('/dashboard-admin');
   };
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
-      <div className="relative w-full h-72 overflow-hidden bg-gray-200">
-        <img 
-          src="src/assets/images/login.png" 
-          alt="Smart Harvest" 
+
+      {/* Hero Image + Wave */}
+      <div className="relative w-full flex-shrink-0" style={{ height: '230px' }}>
+        <img
+          src="src/assets/images/login.png"
+          alt="Smart Harvest"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
 
         {/* Back Button */}
-        <button className="absolute top-12 left-4 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center z-20 shadow-lg hover:bg-white transition-all active:scale-95">
-          <span className="text-lg">←</span>
+        <button
+          onClick={() => navigate('/')}
+          className="absolute top-12 left-4 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center z-20 shadow-lg hover:bg-white transition-all active:scale-95"
+        >
+          <span className="text-gray-700 font-bold text-lg leading-none">‹</span>
         </button>
+
+        {/* Wave overlay — sits at the bottom of the image, white wave cutting into it */}
+        <div className="absolute bottom-0 left-0 right-0 z-10" style={{ lineHeight: 0 }}>
+          <svg
+            viewBox="0 0 390 60"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            style={{ display: 'block', width: '100%', height: '60px' }}
+          >
+            <path
+              d="M0,30 C60,60 120,0 195,20 C270,40 330,0 390,30 L390,60 L0,60 Z"
+              fill="white"
+            />
+          </svg>
+        </div>
       </div>
 
-      {/* Wave Divider */}
-      <div className="w-full h-12 bg-white relative -mb-1">
-        <svg className="w-full h-full" viewBox="0 0 1200 60" preserveAspectRatio="none">
-          <path d="M0,32L48,37.3C96,43,192,53,288,53.3C384,53,480,43,576,40C672,37,768,43,864,45.3C960,48,1056,48,1104,48L1152,48L1200,48L1200,60L1152,60C1104,60,1008,60,912,60C816,60,720,60,624,60C528,60,432,60,336,60C240,60,144,60,96,60L0,60Z" fill="#f8fafc"></path>
-        </svg>
-      </div>
+      {/* Content */}
+      <div className="flex-1 bg-white px-6 pt-2 pb-10 flex flex-col overflow-y-auto">
 
-      {/* Content Section */}
-      <div className="flex-1 px-6 py-10 flex flex-col overflow-y-auto">
         {/* Title */}
-        <h1 className="text-3xl font-bold text-[#6b8a3a] text-center mb-1">
+        <h1 className="text-3xl font-bold text-[#5a6e1a] text-center mb-1 leading-tight">
           Selamat Datang<br />Kembali
         </h1>
-        <p className="text-sm text-gray-500 text-center mb-8">Masuk ke akun Anda</p>
+        <p className="text-sm text-gray-400 text-center mb-6">Masuk ke akun Anda</p>
 
-        {/* User Type Selection */}
-        <div className="flex gap-4 mb-8 justify-center">
-          <button 
-            className={`flex flex-col items-center gap-2 px-6 py-4 rounded-2xl transition-all transform ${
-              userType === 'pedagang' 
-                ? 'bg-[#a3a551] text-white shadow-lg scale-105' 
-                : 'bg-[#e8efd6] text-[#6b8a3a] hover:bg-[#dde8c5] shadow-sm'
-            }`}
-            onClick={() => setUserType('pedagang')}
-          >
-            <span className="text-2xl">🏪</span>
-            <span className="text-sm font-semibold">Pedagang</span>
-          </button>
-          <button 
-            className={`flex flex-col items-center gap-2 px-6 py-4 rounded-2xl transition-all transform ${
-              userType === 'petani' 
-                ? 'bg-[#a3a551] text-white shadow-lg scale-105' 
-                : 'bg-[#e8efd6] text-[#6b8a3a] hover:bg-[#dde8c5] shadow-sm'
-            }`}
-            onClick={() => setUserType('petani')}
-          >
-            <span className="text-2xl">🚜</span>
-            <span className="text-sm font-semibold">Petani</span>
-          </button>
-          <button 
-            className={`flex flex-col items-center gap-2 px-6 py-4 rounded-2xl transition-all transform ${
-              userType === 'admin' 
-                ? 'bg-[#a3a551] text-white shadow-lg scale-105' 
-                : 'bg-[#e8efd6] text-[#6b8a3a] hover:bg-[#dde8c5] shadow-sm'
-            }`}
-            onClick={() => setUserType('admin')}
-          >
-            <span className="text-2xl">👨‍💼</span>
-            <span className="text-sm font-semibold">Admin</span>
-          </button>
+        {/* User Type Selection — single pill container */}
+        <div className="flex items-center justify-around bg-[#eaf0d8] rounded-full px-2 py-2 mb-5">
+          {[
+            { id: 'pedagang', label: 'Pedagang', icon: 'mdi:storefront-outline' },
+            { id: 'petani',   label: 'Petani',   icon: 'game-icons:farmer' },
+            { id: 'admin',    label: 'Admin',    icon: 'mdi:account-outline' },
+          ].map(role => (
+            <button
+              key={role.id}
+              onClick={() => setUserType(role.id)}
+              className={`flex flex-col items-center gap-1 px-6 py-1 rounded-full transition-all ${
+                userType === role.id
+                  ? 'bg-white text-[#5a6e1a] shadow-sm'
+                  : 'text-[#7a8c2e]'
+              }`}
+            >
+              <Icon icon={role.icon} className="text-2xl" />
+              <span className="text-xs font-semibold">{role.label}</span>
+            </button>
+          ))}
         </div>
 
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="flex flex-col gap-4 mb-8">
-          {/* Email Input */}
+        {/* Form */}
+        <form onSubmit={handleLogin} className="flex flex-col gap-3 mb-5">
+          {/* Email */}
           <div className="relative">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-lg text-gray-400">✉️</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a8c2e]">
+              <Icon icon="mdi:account-outline" className="text-xl" />
+            </span>
             <input
               type="email"
               placeholder="Masukkan Email Anda"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-5 py-4 pl-14 bg-[#e8efd6] rounded-2xl text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#a3a551] focus:bg-white transition-all shadow-sm"
+              onChange={e => setEmail(e.target.value)}
+              className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
             />
           </div>
 
-          {/* Password Input */}
+          {/* Password */}
           <div className="relative">
-            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-lg text-gray-400">🔒</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a8c2e]">
+              <Icon icon="mdi:lock-outline" className="text-xl" />
+            </span>
             <input
               type="password"
               placeholder="Masukkan Kata Sandi Anda"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-4 pl-14 bg-[#e8efd6] rounded-2xl text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#a3a551] focus:bg-white transition-all shadow-sm"
+              onChange={e => setPassword(e.target.value)}
+              className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
             />
           </div>
 
           {/* Remember & Forgot */}
-          <div className="flex justify-between items-center text-xs px-1 mt-2">
-            <label className="flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-800">
-              <input 
-                type="checkbox" 
+          <div className="flex justify-between items-center text-xs px-1 mt-1">
+            <label className="flex items-center gap-2 cursor-pointer text-gray-500">
+              <input
+                type="checkbox"
                 checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="accent-[#a3a551] w-4 h-4 cursor-pointer"
+                onChange={e => setRememberMe(e.target.checked)}
+                className="accent-[#7a8c2e] w-4 h-4 cursor-pointer"
               />
               <span className="select-none">Ingat Saya</span>
             </label>
-            <a href="#" className="text-[#a3a551] font-semibold hover:text-[#929548] transition-colors">Lupa Kata Sandi?</a>
+            <a href="#" className="text-gray-500 font-medium underline hover:text-[#7a8c2e] transition-colors">
+              Lupa Kata Sandi?
+            </a>
           </div>
 
           {/* Login Button */}
-          <button 
-            type="submit" 
-            className="w-full bg-[#a3a551] hover:bg-[#929548] text-white font-bold py-3 px-6 rounded-2xl text-base transition-all active:scale-95 shadow-md hover:shadow-lg mt-4"
+          <button
+            type="submit"
+            className="w-full bg-[#7a8c2e] hover:bg-[#8a9c3e] active:scale-95 text-white font-bold py-4 rounded-full text-base transition-all shadow-md mt-3"
           >
             Masuk
           </button>
         </form>
 
-        {/* Register Link */}
-        <p className="text-center text-sm text-gray-600 mb-8">
-          Belum Punya Akun? <a href="/register" className="text-[#a3a551] font-bold hover:text-[#929548] transition-colors">Daftar Sekarang</a>
+        {/* Register */}
+        <p className="text-center text-sm text-gray-500 mb-6">
+          Belum Punya Akun?{' '}
+          <a href="/register" className="text-gray-800 font-bold underline hover:text-[#7a8c2e] transition-colors">
+            Daftar Sekarang
+          </a>
         </p>
 
-        {/* Social Divider */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="flex-1 h-0.5 bg-gray-300"></div>
-          <span className="text-xs text-gray-500 font-medium px-2">ATAU MASUK DENGAN</span>
-          <div className="flex-1 h-0.5 bg-gray-300"></div>
+        {/* Divider */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-500 font-medium whitespace-nowrap">Atau masuk dengan</span>
+          <div className="flex-1 h-px bg-gray-200" />
         </div>
 
-        {/* Social Buttons */}
-        <div className="flex justify-center gap-6 mb-6">
-          <button type="button" className="w-16 h-16 rounded-full border-2 border-gray-300 bg-white hover:bg-blue-50 hover:border-blue-400 transition-all shadow-sm flex items-center justify-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" className="w-8 h-8" />
+        {/* Social Login */}
+        <div className="flex justify-center gap-5">
+          {/* Facebook */}
+          <button className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all active:scale-95 bg-white">
+            <svg width="28" height="28" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/>
+            </svg>
           </button>
-          <button type="button" className="w-16 h-16 rounded-full border-2 border-gray-300 bg-white hover:bg-red-50 hover:border-red-400 transition-all shadow-sm flex items-center justify-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/2702/2702602.png" alt="Google" className="w-8 h-8" />
+
+          {/* Google */}
+          <button className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all active:scale-95 bg-white">
+            <svg width="26" height="26" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
           </button>
-          <button type="button" className="w-16 h-16 rounded-full border-2 border-gray-300 bg-white hover:bg-gray-100 hover:border-black transition-all shadow-sm flex items-center justify-center">
-            <img src="https://cdn-icons-png.flaticon.com/512/2702/2702051.png" alt="Apple" className="w-8 h-8" />
+
+          {/* Apple */}
+          <button className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center shadow-sm hover:shadow-md transition-all active:scale-95 bg-white">
+            <svg width="26" height="26" viewBox="0 0 24 24">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" fill="#000"/>
+            </svg>
           </button>
         </div>
       </div>

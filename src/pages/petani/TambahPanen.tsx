@@ -11,10 +11,6 @@ export default function TambahPanen() {
   const [status, setStatus] = useState('');
   const [gambar, setGambar] = useState<File | null>(null);
 
-  const handleNavChange = (tab: string) => {
-    console.log('Navigate to:', tab);
-  };
-
   const handleSimpan = () => {
     console.log({ tanaman, jumlah, lokasi, deskripsi, tanggal, kualitas, status, gambar });
   };
@@ -161,7 +157,7 @@ export default function TambahPanen() {
         <p className="text-center text-xs text-[#7a8c2e] underline cursor-pointer">Klik untuk bantuan</p>
       </div>
 
-      <BottomNav activeTab="add" onTabChange={handleNavChange} />
+      <BottomNav role="petani" />
     </div>
   );
 }

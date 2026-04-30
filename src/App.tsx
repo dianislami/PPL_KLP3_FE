@@ -5,8 +5,11 @@ import Register from "./pages/auth/Register";
 import DashboardPetani from "./pages/petani/DashboardPetani";
 import TambahPanen from "./pages/petani/TambahPanen";
 import RiwayatPanen from "./pages/petani/RiwayatPanen";
+import ProfilPetani from "./pages/petani/ProfilPetani";
 import InputKebutuhan from "./pages/pedagang/InputKebutuhan";
 import DaftarPanen from "./pages/pedagang/DaftarPanen";
+import PemulihanPanen from "./pages/petani/PemulihanPanen";
+import StatusPengiriman from "./pages/petani/StatusPengiriman";
 
 export default function App() {
   return (
@@ -16,7 +19,10 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard-petani" element={<DashboardPetani />} />
       <Route path="/tambah-panen" element={<TambahPanen />} />
+      <Route path="/pemulihan-panen" element={<PemulihanPanen />} />
       <Route path="/riwayat-panen" element={<RiwayatPanen />} />
+      <Route path="/profil-petani" element={<ProfilPetani />} />
+      <Route path="/status-pengiriman" element={<StatusPengiriman />} />
       <Route path="/input-kebutuhan" element={<InputKebutuhan />} />
       <Route path="/daftar-panen" element={<DaftarPanen />} /> 
     </Routes>

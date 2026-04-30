@@ -26,11 +26,9 @@ export default function RiwayatPanen() {
   const [kategori, setKategori] = useState('Semua Tanaman');
   const navigate = useNavigate();
 
-  const handleNavChange = (tab: string) => {
-    console.log('Navigate to:', tab);
+  const handleLaporanBaru = () => {
+    navigate('/tambah-panen');
   };
-
-  const handleLaporanBaru = () => navigate('/tambah-panen');
 
 
   return (
@@ -134,7 +132,7 @@ export default function RiwayatPanen() {
         </div>
       </div>
 
-      <BottomNav activeTab="history" onTabChange={handleNavChange} />
+      <BottomNav role="petani" />
     </div>
   );
 }
