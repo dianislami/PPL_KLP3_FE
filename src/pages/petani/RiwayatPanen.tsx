@@ -23,7 +23,6 @@ const periodeOptions: { id: Periode; label: string }[] = [
 
 export default function RiwayatPanen() {
   const [periode, setPeriode] = useState<Periode>('bulan-ini');
-  const [kategori, setKategori] = useState('Semua Tanaman');
   const navigate = useNavigate();
 
   const handleLaporanBaru = () => {
@@ -62,19 +61,6 @@ export default function RiwayatPanen() {
             </button>
           ))}
         </div>
-
-        {/* Kategori Tanaman */}
-        <p className="text-sm font-semibold mb-2">Kategori Tanaman</p>
-        <select
-          value={kategori}
-          onChange={e => setKategori(e.target.value)}
-          className="bg-white/20 text-white text-xs rounded-full px-4 py-1.5 outline-none appearance-none"
-        >
-          <option className="text-black" value="Semua Tanaman">Semua Tanaman</option>
-          <option className="text-black" value="Sayuran">Sayuran</option>
-          <option className="text-black" value="Umbi">Umbi</option>
-          <option className="text-black" value="Buah">Buah</option>
-        </select>
       </div>
 
       {/* Stats Bar */}

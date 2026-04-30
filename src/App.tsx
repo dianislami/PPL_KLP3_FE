@@ -5,13 +5,13 @@ import Register from "./pages/auth/Register";
 import DashboardPetani from "./pages/petani/DashboardPetani";
 import TambahPanen from "./pages/petani/TambahPanen";
 import RiwayatPanen from "./pages/petani/RiwayatPanen";
-import ProfilPetani from "./pages/petani/ProfilPetani";
-import InputKebutuhan from "./pages/pedagang/InputKebutuhan";
-import DaftarPanen from "./pages/pedagang/DaftarPanen";
 import PemulihanPanen from "./pages/petani/PemulihanPanen";
 import StatusPengiriman from "./pages/petani/StatusPengiriman";
 import DetailArtikel from "./pages/petani/DetailArtikel";
 import Chat from "./pages/petani/Chat";
+import ProfilPetani from "./pages/petani/ProfilPetani";
+import InputKebutuhan from "./pages/pedagang/InputKebutuhan";
+import DaftarPanen from "./pages/pedagang/DaftarPanen";
 import HasilMatching from "./pages/pedagang/HasilMatching";
 import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang";
 

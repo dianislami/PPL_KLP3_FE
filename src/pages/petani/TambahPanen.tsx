@@ -1,18 +1,32 @@
 import { useState } from 'react';
+import { useRef } from 'react';
 import BottomNav from '../../components/layout/BottomNav';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+
 
 export default function TambahPanen() {
   const [tanaman, setTanaman] = useState('');
   const [jumlah, setJumlah] = useState('');
-  const [lokasi, setLokasi] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [tanggal, setTanggal] = useState('');
   const [kualitas, setKualitas] = useState('');
   const [status, setStatus] = useState('');
   const [gambar, setGambar] = useState<File | null>(null);
 
+  const navigate = useNavigate();
+  const dateRef = useRef<HTMLInputElement>(null);
+
+  const ICONS = {
+    tanaman: 'mdi:sprout',                 
+    jumlah: 'mdi:scale-balance',           
+    tanggal: 'mdi:calendar-range-outline', 
+    deskripsi: 'mdi:card-text-outline',    
+    foto: 'mdi:camera-outline',            
+  };
+
   const handleSimpan = () => {
-    console.log({ tanaman, jumlah, lokasi, deskripsi, tanggal, kualitas, status, gambar });
+    console.log({ tanaman, jumlah, deskripsi, tanggal, kualitas, status, gambar });
   };
 
   const handleGambar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,9 +42,12 @@ export default function TambahPanen() {
             <h1 className="text-3xl font-bold">Hallo, Farmers</h1>
             <p className="text-sm opacity-80">Senin, 28 April 2026</p>
           </div>
-          <div className="flex gap-2 items-center">
-            <span className="text-xs bg-white/20 rounded-full px-3 py-1">Riwayat</span>
-          </div>
+          <button 
+            onClick={() => navigate('/riwayat-panen')}
+            className="flex gap-2 items-center text-xs bg-white/20 rounded-full px-3 py-1"
+          >
+            Riwayat
+          </button>
         </div>
       </div>
 
@@ -56,7 +73,9 @@ export default function TambahPanen() {
 
         {/* Nama Tanaman */}
         <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3 shadow-sm">
-          <div className="w-9 h-9 bg-[#f0f4e0] rounded-xl flex items-center justify-center text-lg flex-shrink-0">🧺</div>
+          <div className="w-9 h-9 bg-[#f0f4e0] text-[#7a8c2e] rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+            <Icon icon={ICONS.tanaman} />
+          </div>
           <input
             className="flex-1 text-sm bg-transparent outline-none placeholder-gray-300"
             placeholder="Nama Tanaman (komoditas)"
@@ -67,7 +86,9 @@ export default function TambahPanen() {
 
         {/* Jumlah Panen */}
         <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3 shadow-sm">
-          <div className="w-9 h-9 bg-[#f0f4e0] rounded-xl flex items-center justify-center text-lg flex-shrink-0">⚖️</div>
+          <div className="w-9 h-9 bg-[#f0f4e0] text-[#7a8c2e] rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+            <Icon icon={ICONS.jumlah} />
+          </div>
           <input
             type="number"
             className="flex-1 text-sm bg-transparent outline-none placeholder-gray-300"
@@ -77,20 +98,11 @@ export default function TambahPanen() {
           />
         </div>
 
-        {/* Lokasi Lahan */}
-        <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3 shadow-sm">
-          <div className="w-9 h-9 bg-[#f0f4e0] rounded-xl flex items-center justify-center text-lg flex-shrink-0">📍</div>
-          <input
-            className="flex-1 text-sm bg-transparent outline-none placeholder-gray-300"
-            placeholder="Lokasi Lahan"
-            value={lokasi}
-            onChange={e => setLokasi(e.target.value)}
-          />
-        </div>
-
         {/* Deskripsi Panen */}
         <div className="flex items-start gap-3 bg-white border border-gray-100 rounded-2xl px-4 py-3 mb-3 shadow-sm">
-          <div className="w-9 h-9 bg-[#f0f4e0] rounded-xl flex items-center justify-center text-lg flex-shrink-0 mt-0.5">📋</div>
+          <div className="w-9 h-9 bg-[#f0f4e0] text-[#7a8c2e] rounded-xl flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
+            <Icon icon={ICONS.deskripsi} />
+          </div>
           <textarea
             className="flex-1 text-sm bg-transparent outline-none placeholder-gray-300 resize-none"
             placeholder="Deskripsi Panen"
@@ -103,8 +115,14 @@ export default function TambahPanen() {
         {/* Tanggal & Gambar */}
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="flex items-center gap-2 bg-white border border-gray-100 rounded-2xl px-3 py-3 shadow-sm">
-            <div className="w-9 h-9 bg-[#f0f4e0] rounded-xl flex items-center justify-center text-base flex-shrink-0">📅</div>
+            <div 
+              onClick={() => dateRef.current?.showPicker()}
+              className="w-9 h-9 bg-[#f0f4e0] text-[#7a8c2e] rounded-xl flex items-center justify-center text-base flex-shrink-0"
+            >
+              <Icon icon={ICONS.tanggal} />
+            </div>
             <input
+              ref={dateRef}
               type="date"
               className="flex-1 text-xs bg-transparent outline-none text-gray-400"
               value={tanggal}
@@ -112,10 +130,11 @@ export default function TambahPanen() {
             />
           </div>
           <label className="flex items-center gap-2 bg-white border-2 border-dashed border-[#c8d4a0] rounded-2xl px-3 py-3 cursor-pointer">
-            <div className="w-9 h-9 bg-[#f0f4e0] rounded-xl flex items-center justify-center text-base flex-shrink-0">📷</div>
+            <div className="w-9 h-9 bg-[#f0f4e0] text-[#7a8c2e] rounded-xl flex items-center justify-center text-base flex-shrink-0">
+              <Icon icon={ICONS.foto} />
+            </div>
             <div>
-              <p className="text-xs font-medium text-gray-600">{gambar ? gambar.name.slice(0, 10) + '…' : 'Ambil Gambar'}</p>
-              <p className="text-[10px] text-gray-400">Foto hasil panen</p>
+              <p className="text-xs font-medium text-gray-600">{gambar ? gambar.name.slice(0, 10) + '…' : 'Foto hasil panen'}</p>
             </div>
             <input type="file" accept="image/*" className="hidden" onChange={handleGambar} />
           </label>

@@ -27,9 +27,21 @@ const artikel = artikelData as Artikel[];
 export default function DashboardPetani() {
   const [location] = useState('Banda Aceh');
   const [temperature] = useState('32');
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const handleInputPanen = () => navigate('/tambah-panen');
+
+  // Filter artikel berdasarkan search query
+  const filteredArtikel = artikel.filter(item => {
+    const query = searchQuery.toLowerCase();
+    return (
+      item.judul.toLowerCase().includes(query) ||
+      item.ringkasan.toLowerCase().includes(query) ||
+      item.kategori.toLowerCase().includes(query) ||
+      item.isi.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
@@ -50,8 +62,10 @@ export default function DashboardPetani() {
           <Icon icon={ICONS.search} className="text-xl absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70" />
           <input
             type="text"
-            placeholder="Cari disini"
-            className="w-full pl-12 pr-4 py-2 bg-white/30 text-white placeholder-white/70 rounded-full focus:outline-none focus:ring-1 focus:ring-white/50"
+            placeholder="Cari berita, tips, atau kategori..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-2 bg-white/30 text-white text-sm placeholder-white/70 rounded-full focus:outline-none focus:ring-1 focus:ring-white/50"
           />
         </div>
       </div>
@@ -149,54 +163,62 @@ export default function DashboardPetani() {
         <div className="mb-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-800">Berita & Rekomendasi</h2>
-            <span className="text-xs text-[#7a8c2e] font-semibold">{artikel.length} artikel</span>
+            <span className="text-xs text-[#7a8c2e] font-semibold">{filteredArtikel.length} artikel</span>
           </div>
 
-          {/* Artikel Featured (pertama) */}
-          <button
-            onClick={() => navigate(`/detail-artikel/${artikel[0].id}`)}
-            className={`w-full ${artikel[0].warna} rounded-2xl p-4 flex gap-4 mb-3 text-left active:scale-95 transition-all`}
-          >
-            <div className="w-20 h-20 rounded-xl bg-white/60 flex items-center justify-center flex-shrink-0 text-4xl">
-              {artikel[0].emoji}
+          {filteredArtikel.length === 0 ? (
+            <div className="w-full bg-white rounded-2xl p-8 text-center">
+              <p className="text-gray-400 text-sm">Tidak ada artikel yang cocok dengan pencarian "{searchQuery}"</p>
             </div>
-            <div className="flex-1 min-w-0">
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/60 text-gray-600 mb-1.5 inline-block">
-                {artikel[0].kategori}
-              </span>
-              <p className="text-sm font-bold text-gray-800 leading-snug line-clamp-2 mb-1">
-                {artikel[0].judul}
-              </p>
-              <p className="text-xs text-gray-500 line-clamp-2">{artikel[0].ringkasan}</p>
-              <p className="text-[10px] text-gray-400 mt-1">{artikel[0].tanggal}</p>
-            </div>
-          </button>
-
-          {/* Artikel list (sisanya) */}
-          <div className="flex flex-col gap-3">
-            {artikel.slice(1).map(item => (
+          ) : (
+            <>
+              {/* Artikel Featured (pertama dari hasil filter) */}
               <button
-                key={item.id}
-                onClick={() => navigate(`/detail-artikel/${item.id}`)}
-                className="w-full bg-white border border-gray-100 rounded-2xl p-3 flex gap-3 text-left active:scale-95 transition-all shadow-sm"
+                onClick={() => navigate(`/detail-artikel/${filteredArtikel[0].id}`)}
+                className={`w-full ${filteredArtikel[0].warna} rounded-2xl p-4 flex gap-4 mb-3 text-left active:scale-95 transition-all`}
               >
-                <div className={`w-14 h-14 rounded-xl ${item.warna} flex items-center justify-center flex-shrink-0 text-3xl`}>
-                  {item.emoji}
+                <div className="w-20 h-20 rounded-xl bg-white/60 flex items-center justify-center flex-shrink-0 text-4xl">
+                  {filteredArtikel[0].emoji}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#eaf0d8] text-[#5a6e1a]">
-                      {item.kategori}
-                    </span>
-                    <span className="text-[10px] text-gray-400">{item.tanggal}</span>
-                  </div>
-                  <p className="text-sm font-semibold text-gray-800 leading-snug line-clamp-2">
-                    {item.judul}
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/60 text-gray-600 mb-1.5 inline-block">
+                    {filteredArtikel[0].kategori}
+                  </span>
+                  <p className="text-sm font-bold text-gray-800 leading-snug line-clamp-2 mb-1">
+                    {filteredArtikel[0].judul}
                   </p>
+                  <p className="text-xs text-gray-500 line-clamp-2">{filteredArtikel[0].ringkasan}</p>
+                  <p className="text-[10px] text-gray-400 mt-1">{filteredArtikel[0].tanggal}</p>
                 </div>
               </button>
-            ))}
-          </div>
+
+              {/* Artikel list (sisanya) */}
+              <div className="flex flex-col gap-3">
+                {filteredArtikel.slice(1).map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => navigate(`/detail-artikel/${item.id}`)}
+                    className="w-full bg-white border border-gray-100 rounded-2xl p-3 flex gap-3 text-left active:scale-95 transition-all shadow-sm"
+                  >
+                    <div className={`w-14 h-14 rounded-xl ${item.warna} flex items-center justify-center flex-shrink-0 text-3xl`}>
+                      {item.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#eaf0d8] text-[#5a6e1a]">
+                          {item.kategori}
+                        </span>
+                        <span className="text-[10px] text-gray-400">{item.tanggal}</span>
+                      </div>
+                      <p className="text-sm font-semibold text-gray-800 leading-snug line-clamp-2">
+                        {item.judul}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
