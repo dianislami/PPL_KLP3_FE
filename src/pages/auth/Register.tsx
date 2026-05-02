@@ -2,24 +2,64 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FormEvent } from 'react';
 import { Icon } from '@iconify/react';
+import { authAPI } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [userType, setUserType] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleRegister = (e: FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+
     if (password !== confirmPassword) {
-      alert('Kata sandi tidak cocok!');
+      setError('Kata sandi tidak cocok!');
       return;
     }
-    console.log('Register:', { userType, name, email, password });
-    if (userType === 'petani') navigate('/dashboard-petani');
-    else if (userType === 'pedagang') navigate('/dashboard-pedagang');
+
+    setLoading(true);
+    try {
+      const response = await authAPI.register({
+        nama: name,
+        email,
+        password,
+        role: userType,
+      });
+
+      const newUser = response.data;
+      const token = 'token_' + newUser._id + '_' + Date.now();
+
+      login(
+        {
+          id: newUser._id,
+          nama: newUser.nama,
+          email: newUser.email,
+          role: newUser.role,
+          created_at: newUser.created_at,
+        },
+        token
+      );
+
+      setSuccess('Pendaftaran berhasil! Mengalihkan...');
+      setTimeout(() => {
+        if (userType === 'petani') navigate('/dashboard-petani');
+        else if (userType === 'pedagang') navigate('/dashboard-pedagang');
+      }, 1500);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Pendaftaran gagal');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,6 +130,20 @@ export default function Register() {
 
         {/* Form */}
         <form onSubmit={handleRegister} className="flex flex-col gap-3 mb-5">
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+              {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">
+              {success}
+            </div>
+          )}
+
           {/* Name */}
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a8c2e]">
@@ -102,6 +156,7 @@ export default function Register() {
               onChange={e => setName(e.target.value)}
               className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
+              disabled={loading}
             />
           </div>
 
@@ -117,6 +172,7 @@ export default function Register() {
               onChange={e => setEmail(e.target.value)}
               className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
+              disabled={loading}
             />
           </div>
 
@@ -132,6 +188,7 @@ export default function Register() {
               onChange={e => setPassword(e.target.value)}
               className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
+              disabled={loading}
             />
           </div>
 
@@ -147,15 +204,17 @@ export default function Register() {
               onChange={e => setConfirmPassword(e.target.value)}
               className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
+              disabled={loading}
             />
           </div>
 
           {/* Register Button */}
           <button
             type="submit"
-            className="w-full bg-[#7a8c2e] hover:bg-[#8a9c3e] active:scale-95 text-white font-bold py-4 rounded-full text-base transition-all shadow-md mt-3"
+            disabled={loading || !userType}
+            className="w-full bg-[#7a8c2e] hover:bg-[#8a9c3e] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-full text-base transition-all shadow-md mt-3"
           >
-            Daftar
+            {loading ? 'Sedang Mendaftar...' : 'Daftar'}
           </button>
         </form>
 

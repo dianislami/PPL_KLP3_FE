@@ -69,9 +69,6 @@ export default function PemulihanPanen() {
             <h1 className="text-3xl font-bold">Pemulihan Panen</h1>
             <p className="text-sm opacity-80">Kamis, 30 April 2026</p>
           </div>
-          <div className="w-11 h-11 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-xl">
-            👨‍🌾
-          </div>
         </div>
 
         {/* Filter Periode */}

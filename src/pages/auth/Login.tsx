@@ -2,19 +2,67 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FormEvent } from 'react';
 import { Icon } from '@iconify/react';
+import { useAuth } from '../../context/AuthContext';
+import { authAPI } from '../../services/api';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [userType, setUserType] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (userType === 'petani') navigate('/dashboard-petani');
-    else if (userType === 'pedagang') navigate('/dashboard-pedagang');
-    else if (userType === 'admin') navigate('/dashboard-admin');
+    setLoading(true);
+    setError('');
+
+    try {
+      // Get all users and check credentials
+      const response = await authAPI.getUsers();
+      const users = response.data;
+      
+      // Find user with matching email and role
+      const user = users.find((u: any) => u.email === email && u.role === userType);
+      
+      if (!user) {
+        setError('Email atau role tidak ditemukan');
+        setLoading(false);
+        return;
+      }
+
+      // Simple password check (in production, use proper backend authentication)
+      if (user.password !== password) {
+        setError('Password salah');
+        setLoading(false);
+        return;
+      }
+
+      // Simulate JWT token
+      const token = 'token_' + user._id + '_' + Date.now();
+      
+      login(
+        {
+          id: user._id,
+          nama: user.nama,
+          email: user.email,
+          role: user.role,
+          created_at: user.created_at,
+        },
+        token
+      );
+
+      if (userType === 'petani') navigate('/dashboard-petani');
+      else if (userType === 'pedagang') navigate('/dashboard-pedagang');
+      else if (userType === 'admin') navigate('/dashboard-admin');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login gagal');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -86,6 +134,13 @@ export default function Login() {
 
         {/* Form */}
         <form onSubmit={handleLogin} className="flex flex-col gap-3 mb-5">
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+              {error}
+            </div>
+          )}
+
           {/* Email */}
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7a8c2e]">
@@ -98,6 +153,7 @@ export default function Login() {
               onChange={e => setEmail(e.target.value)}
               className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
+              disabled={loading}
             />
           </div>
 
@@ -113,6 +169,7 @@ export default function Login() {
               onChange={e => setPassword(e.target.value)}
               className="w-full pl-12 pr-5 py-4 bg-[#eaf0d8] rounded-2xl text-sm text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7a8c2e] transition-all"
               required
+              disabled={loading}
             />
           </div>
 
@@ -124,6 +181,7 @@ export default function Login() {
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
                 className="accent-[#7a8c2e] w-4 h-4 cursor-pointer"
+                disabled={loading}
               />
               <span className="select-none">Ingat Saya</span>
             </label>
@@ -135,9 +193,10 @@ export default function Login() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-[#7a8c2e] hover:bg-[#8a9c3e] active:scale-95 text-white font-bold py-4 rounded-full text-base transition-all shadow-md mt-3"
+            disabled={loading || !userType}
+            className="w-full bg-[#7a8c2e] hover:bg-[#8a9c3e] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 text-white font-bold py-4 rounded-full text-base transition-all shadow-md mt-3"
           >
-            Masuk
+            {loading ? 'Sedang Masuk...' : 'Masuk'}
           </button>
         </form>
 

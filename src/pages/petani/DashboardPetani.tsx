@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BottomNav from '../../components/layout/BottomNav';
 import { useNavigate } from 'react-router-dom';
 import artikelData from '../data/artikelBerita.json';
 import { Icon } from '@iconify/react';
+import { useAuth } from '../../context/AuthContext';
+import { weatherAPI } from '../../services/api';
 
 interface Artikel {
   id: string;
@@ -15,6 +17,16 @@ interface Artikel {
   warna: string;
 }
 
+interface WeatherData {
+  lokasi: string;
+  suhu: string;
+  kelembapan: number;
+  angin: string;
+  kondisi: string;
+  deskripsi: string;
+  icon: string;
+}
+
 const ICONS = {
   recovery: 'mdi:recycle',
   delivery: 'mdi:truck-fast-outline',
@@ -25,10 +37,36 @@ const ICONS = {
 const artikel = artikelData as Artikel[];
 
 export default function DashboardPetani() {
-  const [location] = useState('Banda Aceh');
-  const [temperature] = useState('32');
+  const [weather, setWeather] = useState<WeatherData | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await weatherAPI.get();
+        setWeather(response.data);
+      } catch (error) {
+        console.error('Failed to fetch weather:', error);
+        // Fallback data
+        setWeather({
+          lokasi: 'Banda Aceh',
+          suhu: '32',
+          kelembapan: 75,
+          angin: '2.7',
+          kondisi: 'Cloudy',
+          deskripsi: 'Berawan sebagian',
+          icon: 'https://openweathermap.org/img/wn/02d@2x.png'
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeather();
+  }, []);
 
   const handleInputPanen = () => navigate('/tambah-panen');
 
@@ -49,8 +87,8 @@ export default function DashboardPetani() {
       <div className="px-6 py-6 text-white">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-3xl font-bold">Hallo, Farmers</h1>
-            <p className="text-sm opacity-90">Kamis, 30 April 2026</p>
+            <h1 className="text-2xl font-bold">Hallo, {user?.nama || 'Farmers'}</h1>
+            <p className="text-sm opacity-90">{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           </div>
           <div className="w-11 h-11 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-xl">
             👨‍🌾
@@ -74,17 +112,23 @@ export default function DashboardPetani() {
       <div className="flex-1 px-6 pb-24 flex flex-col overflow-y-auto bg-white rounded-t-3xl mt-4">
 
         {/* Location & Weather Card */}
-        <div className="bg-white rounded-2xl p-6 mb-6 shadow-md -mt-6">
+        <div className="bg-white rounded-2xl p-6 mt-2 shadow-md">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-2">
               <span className="text-xl">📍</span>
               <div>
-                <p className="font-semibold text-gray-800">{location}</p>
+                <p className="font-semibold text-gray-800">{loading ? 'Memuat...' : weather?.lokasi || 'Banda Aceh'}</p>
               </div>
             </div>
             <div className="text-center">
-              <span className="text-2xl">☁️</span>
-              <p className="text-2xl font-bold text-gray-800">+{temperature}°C</p>
+              {loading ? (
+                <p className="text-2xl font-bold text-gray-800">--°C</p>
+              ) : (
+                <>
+                  <img src={weather?.icon} alt="weather" className="w-12 h-12 mx-auto mb-1" />
+                  <p className="text-2xl font-bold text-gray-800">+{weather?.suhu}°C</p>
+                </>
+              )}
             </div>
           </div>
 
@@ -92,44 +136,33 @@ export default function DashboardPetani() {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl mb-1">🌡️</div>
-              <p className="text-xs text-gray-500">Suhu tanah</p>
-              <p className="font-bold text-gray-800">+30°C</p>
+              <p className="text-xs text-gray-500">Suhu</p>
+              <p className="font-bold text-gray-800">{loading ? '--' : `+${weather?.suhu}°C`}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl mb-1">💨</div>
               <p className="text-xs text-gray-500">Angin</p>
-              <p className="font-bold text-gray-800">5 Km/h</p>
+              <p className="font-bold text-gray-800">{loading ? '--' : `${weather?.angin} m/s`}</p>
             </div>
             <div className="text-center">
               <div className="text-2xl mb-1">💧</div>
               <p className="text-xs text-gray-500">Kelembaban</p>
-              <p className="font-bold text-gray-800">88%</p>
+              <p className="font-bold text-gray-800">{loading ? '--' : `${weather?.kelembapan}%`}</p>
             </div>
           </div>
 
-          {/* Sun Path */}
-          <div className="relative h-24 mb-2">
-            <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="none">
-              <path d="M10,80 Q150,20 290,80" stroke="#999" strokeWidth="2" fill="none" strokeDasharray="5,5" />
-              <circle cx="150" cy="30" r="8" fill="#FFD700" />
-            </svg>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 px-2">
-            <div>
-              <p>Fajar</p>
-              <p className="font-semibold text-gray-700">06.33</p>
-            </div>
-            <div className="text-right">
-              <p>Senja</p>
-              <p className="font-semibold text-gray-700">18.46</p>
-            </div>
+          {/* Kondisi */}
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-3 text-center">
+            <p className="text-sm text-gray-600">
+              {loading ? 'Memuat data cuaca...' : weather?.deskripsi}
+            </p>
           </div>
         </div>
 
         {/* Input Hasil Panen Button */}
         <button
           onClick={handleInputPanen}
-          className="w-full bg-[#7a8c2e] hover:bg-[#929548] text-white font-bold py-4 px-6 rounded-2xl text-lg transition-all shadow-md mb-6"
+          className="w-full bg-[#7a8c2e] hover:bg-[#929548] text-white font-bold py-4 px-6 rounded-2xl text-lg transition-all shadow-md mb-6 mt-6"
         >
           Input Hasil Panen
         </button>

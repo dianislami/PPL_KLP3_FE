@@ -6,6 +6,7 @@ import DashboardPetani from "./pages/petani/DashboardPetani";
 import TambahPanen from "./pages/petani/TambahPanen";
 import RiwayatPanen from "./pages/petani/RiwayatPanen";
 import PemulihanPanen from "./pages/petani/PemulihanPanen";
+import DetailPanen from "./pages/petani/DetailPanen";
 import StatusPengiriman from "./pages/petani/StatusPengiriman";
 import DetailArtikel from "./pages/petani/DetailArtikel";
 import Chat from "./pages/petani/Chat";
@@ -14,6 +15,7 @@ import InputKebutuhan from "./pages/pedagang/InputKebutuhan";
 import DaftarPanen from "./pages/pedagang/DaftarPanen";
 import HasilMatching from "./pages/pedagang/HasilMatching";
 import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang";
+import UbahKataSandi from "./pages/petani/UbahKataSandi";
 
 export default function App() {
   return (
@@ -25,7 +27,9 @@ export default function App() {
       <Route path="/tambah-panen" element={<TambahPanen />} />
       <Route path="/pemulihan-panen" element={<PemulihanPanen />} />
       <Route path="/riwayat-panen" element={<RiwayatPanen />} />
+      <Route path="/detail-panen/:id" element={<DetailPanen />} />
       <Route path="/profil-petani" element={<ProfilPetani />} />
+      <Route path="/ubah-kata-sandi" element={<UbahKataSandi />} />
       <Route path="/status-pengiriman" element={<StatusPengiriman />} />
       <Route path="/input-kebutuhan" element={<InputKebutuhan />} />
       <Route path="/daftar-panen" element={<DaftarPanen />} /> 
