@@ -33,8 +33,11 @@ export const authAPI = {
 export const panenAPI = {
   create: (data: any) => api.post('/panen', data),
   getAll: () => api.get('/panen'),
+  getGradeC: () => api.get('/panen/grade-c'),
+  getRecovery: () => api.get('/panen/recovery'),
   getById: (id: string) => api.get(`/panen/${id}`),
   update: (id: string, data: any) => api.put(`/panen/${id}`, data),
+  updateRecovery: (id: string, data: any) => api.put(`/panen/${id}/recovery`, data),
   delete: (id: string) => api.delete(`/panen/${id}`),
 };
 
