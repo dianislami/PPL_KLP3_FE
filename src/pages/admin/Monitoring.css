@@ -1,0 +1,140 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.phone {
+  max-width: 390px;
+  margin: auto;
+  min-height: 100dvh;
+  background: #f4f4f4;
+  font-family: "Poppins", sans-serif;
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 20px;
+}
+
+.date {
+  font-size: 12px;
+  color: #555;
+}
+
+.profile {
+  background: #ddd;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* TITLE */
+.title {
+  margin: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* CARD */
+.card {
+  background: #cfd8a5;
+  padding: 16px;
+  border-radius: 25px;
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.stat {
+  flex: 1;
+  background: #dfe8b9;
+  padding: 10px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.stat-title {
+  font-size: 11px;
+  color: #444;
+}
+
+.stat h2 {
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+/* CHART */
+.chart-box {
+  background: #dfe8b9;
+  border-radius: 15px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.chart-box h4 {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Recharts tweak biar rapi */
+.recharts-wrapper {
+  font-size: 10px;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: #555;
+}
+
+.recharts-tooltip-wrapper {
+  font-size: 12px;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  font-size: 10px;
+  margin-top: 10px;
+  color: #555;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  background: black;
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}
+
+.nav-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.nav-btn.active {
+  background: #6b8e00;
+}
