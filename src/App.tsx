@@ -20,6 +20,7 @@ import RiwayatPedagang from "./pages/pedagang/RiwayatPedagang";
 import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang";
 import DetailProduk from "./pages/pedagang/DetailProduk";
 import UbahKataSandi from "./pages/petani/UbahKataSandi";
+import PanduanKualitas from "./pages/petani/PanduanKualitas";
 
 export default function App() {
   return (
@@ -40,12 +41,16 @@ export default function App() {
       <Route path="/input-kebutuhan" element={<InputKebutuhan />} />
       <Route path="/riwayat-pedagang" element={<RiwayatPedagang />} />
       <Route path="/hasil-panen" element={<DaftarPanen />} />
-      <Route path="/daftar-panen" element={<DaftarPanen />} /> 
+      <Route path="/daftar-panen" element={<DaftarPanen />} />
       <Route path="/detail-produk/:id" element={<DetailProduk />} />
       <Route path="/detail-artikel/:id" element={<DetailArtikel />} />
       <Route path="/chat/:nama?" element={<Chat />} />
-      <Route path="/hasil-matching" element={<HasilMatching />} /> 
-      <Route path="/status-pengiriman-pedagang" element={<StatusPengirimanPedagang />} />
+      <Route path="/hasil-matching/:id" element={<HasilMatching />} />
+      <Route
+        path="/status-pengiriman-pedagang/:id"
+        element={<StatusPengirimanPedagang />}
+      />
+      <Route path="/panduan-kualitas" element={<PanduanKualitas />} />
     </Routes>
   );
 }

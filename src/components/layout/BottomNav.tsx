@@ -20,7 +20,7 @@ export default function BottomNav({ role = 'petani' }: BottomNavProps) {
   const pedagangNavItems = [
     { id: 'home', label: 'Beranda', icon: 'mdi:home', path: '/dashboard-pedagang' },
     { id: 'kebutuhan', label: 'Kebutuhan', icon: 'mdi:cart-plus', path: '/input-kebutuhan' },
-    { id: 'hasil', label: 'Hasil Panen', icon: 'mdi:clipboard-list-outline', path: '/hasil-panen' },
+    { id: 'hasil', label: 'Daftar Panen', icon: 'mdi:clipboard-list-outline', path: '/hasil-panen' },
     { id: 'riwayat', label: 'Riwayat', icon: 'mdi:history', path: '/riwayat-pedagang' },
     { id: 'profile', label: 'Profil', icon: 'mdi:account', path: '/profil-pedagang' },
   ];

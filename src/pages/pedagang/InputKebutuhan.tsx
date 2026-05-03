@@ -1,242 +1,335 @@
-import { useState } from 'react';
-import BottomNav from '../../components/layout/BottomNav';
-import { permintaanAPI } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
-
-const IconBasket = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/><path d="M5 9h14"/><path d="M5 21h14a2 2 0 0 0 2-2V9H3v10a2 2 0 0 0 2 2Z"/></svg>
-);
-
-const IconCalendar = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
-);
-
-const IconChevron = ({ isOpen }: { isOpen: boolean }) => (
-  <div className={`bg-black/20 rounded-full p-0.5 transition-transform ${isOpen ? 'rotate-180' : ''}`}>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-  </div>
-);
+import { useState, useEffect } from "react";
+import BottomNav from "../../components/layout/BottomNav";
+import { permintaanAPI, panenAPI } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
+import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
 
 export default function InputKebutuhan() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // UI States
   const [showKualitas, setShowKualitas] = useState(false);
-  const [showStatus, setShowStatus] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isMatching, setIsMatching] = useState(false); // Untuk animasi mencari petani
+  const [showResult, setShowResult] = useState(false); // Untuk popup sukses
+  const [matchData, setMatchData] = useState<any>(null);
+  const [stats, setStats] = useState({ count: 0, value: 0 });
+
   const [formData, setFormData] = useState({
-    nama_komoditas: '',
-    jumlah: '',
-    tanggal: '',
-    kualitas: 'Premium',
-    status: 'Tersedia',
+    nama_komoditas: "",
+    jumlah: "",
+    tanggal: "",
+    kualitas: "A",
   });
 
-  const listKualitas = ['Premium', 'Standar', 'Ekonomis', 'Rusak'];
-  const listStatus   = ['Tersedia', 'Sebagian Terjual', 'Sudah Dialokasikan'];
+  const listKualitas = ["A", "B", "C", "Premium"];
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await panenAPI.getAll();
+        const data = response.data || [];
+        const available = data.filter(
+          (p: any) => p.status !== "Terjual" && p.jumlah > 0,
+        );
+        const totalVal = available.reduce(
+          (s: number, p: any) => s + p.jumlah * (p.harga || 0),
+          0,
+        );
+        setStats({ count: available.length, value: totalVal });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSelectKualitas = (value: string) => {
-    handleInputChange('kualitas', value);
-    setShowKualitas(false);
-  };
-
-  const handleSelectStatus = (value: string) => {
-    handleInputChange('status', value);
-    setShowStatus(false);
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async () => {
-    if (!formData.nama_komoditas || !formData.jumlah || !formData.tanggal || !user?.id) {
-      alert('Mohon isi semua field');
+    if (
+      !formData.nama_komoditas ||
+      !formData.jumlah ||
+      !formData.tanggal ||
+      !user?.id
+    ) {
+      alert("Mohon isi semua field");
       return;
     }
+
     try {
       setLoading(true);
-      await permintaanAPI.create({
+      const resCreate = await permintaanAPI.create({
         user_id: user.id,
         nama_komoditas: formData.nama_komoditas,
         jumlah: parseInt(formData.jumlah),
         tanggal: formData.tanggal,
         kualitas: formData.kualitas,
-        status: formData.status,
       });
-      alert('Permintaan berhasil diajukan!');
-      setFormData({ nama_komoditas: '', jumlah: '', tanggal: '', kualitas: 'Premium', status: 'Tersedia' });
+
+      // 2. Tampilkan Overlay "Mencari Petani..."
+      setIsMatching(true);
+
+      // 3. Panggil Logic Matching di Backend
+      const resMatch = await permintaanAPI.match(resCreate.data._id, {});
+
+      // Simulasi delay sedikit agar user lihat proses "Mencari" (Opsional)
+      setTimeout(() => {
+        const data = resMatch.data.data;
+        setMatchData(data); // Simpan hasil matching
+        setIsMatching(false);
+        setShowResult(true);
+        setLoading(false);
+      }, 2000);
     } catch (error) {
-      console.error('Error submitting request:', error);
-      alert('Gagal mengajukan permintaan');
-    } finally {
-      setLoading(false);
+    console.error("Error:", error);
+    alert("Gagal memproses permintaan");
+    setLoading(false);
+    setIsMatching(false);
     }
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
-
-      {/* Header — sama persis dengan halaman lain */}
-      <div className="px-5 pt-6 pb-5 text-white flex-shrink-0">
-        <div className="flex justify-between items-start mb-3">
+    <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col font-sans relative overflow-hidden">
+      {/* HEADER SECTION (Dinamis dari Profil) */}
+      <div className="px-5 pt-10 pb-8 text-white flex-shrink-0">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-3xl font-bold">Input Kebutuhan</h1>
-            <p className="text-sm opacity-80">
-              {new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            <h1 className="text-3xl font-bold text-white">Hallo, Seller</h1>
+            <p className="text-sm opacity-80 mt-1">
+              Lengkapi formulir permintaan Anda
             </p>
           </div>
-          <div className="w-11 h-11 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-xl">
+          <div className="w-12 h-12 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-2xl">
             🏪
           </div>
         </div>
-
-        {/* Info toko */}
-        <div className="flex items-center gap-2 bg-white/15 rounded-2xl px-4 py-2.5">
-          <span className="text-base">📍</span>
-          <div>
-            <p className="text-xs font-bold text-white">CV. Hasil Bumi Sejahtera</p>
-            <p className="text-[11px] text-white/75">Jl. Teuku Umar No. 10, Banda Aceh</p>
+        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm p-3 rounded-2xl border border-white/10">
+          <Icon icon="mdi:map-marker" className="text-xl text-[#dce6a7]" />
+          <div className="text-[11px]">
+            <p className="font-bold uppercase">
+              {user?.nama || "CV. Hasil Bumi Sejahtera"}
+            </p>
+            <p className="opacity-80 text-[10px]">
+              {user?.alamat || "Lokasi belum diatur"}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Stats Bar */}
+      {/* STATS BAR */}
       <div className="mx-4 bg-white rounded-2xl shadow-md p-3 grid grid-cols-3 gap-2 z-10 relative -mb-3">
         <div className="text-center">
-          <p className="text-[10px] text-gray-400">Produk Tersedia</p>
-          <p className="text-xs font-bold text-gray-800">6 Produk</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold">
+            Tersedia
+          </p>
+          <p className="text-xs font-bold text-gray-800">
+            {stats.count} Produk
+          </p>
         </div>
         <div className="text-center border-x border-gray-100">
-          <p className="text-[10px] text-gray-400">Total Nilai</p>
-          <p className="text-xs font-bold text-gray-800">Rp 145Jt</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold">
+            Total Nilai
+          </p>
+          <p className="text-xs font-bold text-gray-800">
+            Rp {(stats.value / 1000000).toFixed(0)}Jt
+          </p>
         </div>
         <div className="text-center">
-          <p className="text-[10px] text-gray-400">Pasar</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold">Pasar</p>
           <p className="text-xs font-bold text-[#7a8c2e]">Stabil ↗</p>
         </div>
       </div>
 
-      {/* Content — white rounded card area */}
-      <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-6 px-5 pb-28 overflow-y-auto">
+      {/* FORM CONTENT */}
+      <div className="flex-1 bg-white rounded-t-[40px] px-5 pt-8 pb-28 shadow-xl overflow-y-auto">
+        <div className="bg-[#f9faf5] rounded-[30px] p-6 border border-[#7a8c2e]/10">
+          <h3 className="font-bold text-[#3a4e10] mb-6 text-sm flex items-center gap-2">
+            <Icon icon="mdi:form-select" className="text-lg" />
+            Formulir Permintaan Komoditas
+          </h3>
 
-        <h2 className="text-base font-bold text-gray-800 mb-4">Input Permintaan Komoditas</h2>
-
-        {/* Form Card — style tidak diubah */}
-        <div className="bg-white rounded-[30px] p-6 shadow-lg mb-6 border border-gray-100 relative">
-          <h3 className="font-bold text-gray-800 mb-6 text-sm">Formulir Permintaan Komoditas</h3>
-
-          <div className="mb-4">
-            <label className="text-[11px] text-gray-500 font-bold ml-1 mb-1 block">Pilih Nama Komoditas:</label>
-            <div className="flex items-center bg-[#e6ead1] rounded-2xl px-4 py-3 text-gray-600">
-              <IconBasket />
+          <div className="space-y-4 mb-6">
+            <div>
+              <label className="text-[10px] text-gray-400 font-bold ml-1 mb-1 block uppercase">
+                Komoditas
+              </label>
               <input
-                type="text"
+                className="w-full bg-white border border-gray-100 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7a8c2e] outline-none shadow-sm"
                 placeholder="Contoh: Cabai Merah"
                 value={formData.nama_komoditas}
-                onChange={e => handleInputChange('nama_komoditas', e.target.value)}
-                className="bg-transparent outline-none text-sm w-full ml-3 placeholder-gray-500"
+                onChange={(e) =>
+                  handleInputChange("nama_komoditas", e.target.value)
+                }
               />
             </div>
-          </div>
-
-          <div className="mb-4">
-            <label className="text-[11px] text-gray-500 font-bold ml-1 mb-1 block">Jumlah (Kg)</label>
-            <div className="flex items-center bg-[#e6ead1] rounded-2xl px-4 py-3 text-gray-600">
-              <IconBasket />
+            <div>
+              <label className="text-[10px] text-gray-400 font-bold ml-1 mb-1 block uppercase">
+                Jumlah (Kg)
+              </label>
               <input
                 type="number"
-                placeholder="Contoh: 200"
+                className="w-full bg-white border border-gray-100 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7a8c2e] outline-none shadow-sm"
+                placeholder="0"
                 value={formData.jumlah}
-                onChange={e => handleInputChange('jumlah', e.target.value)}
-                className="bg-transparent outline-none text-sm w-full ml-3 placeholder-gray-500"
+                onChange={(e) => handleInputChange("jumlah", e.target.value)}
               />
-              <span className="font-bold text-sm ml-2">Kg</span>
             </div>
-          </div>
-
-          <div className="mb-5">
-            <label className="text-[11px] text-gray-500 font-bold ml-1 mb-1 block">Tanggal Panen:</label>
-            <div className="flex items-center bg-[#e6ead1] rounded-2xl px-4 py-3 text-gray-600">
-              <IconCalendar />
+            <div>
+              <label className="text-[10px] text-gray-400 font-bold ml-1 mb-1 block uppercase">
+                Tanggal Dibutuhkan
+              </label>
               <input
                 type="date"
+                className="w-full bg-white border border-gray-100 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#7a8c2e] outline-none shadow-sm"
                 value={formData.tanggal}
-                onChange={e => handleInputChange('tanggal', e.target.value)}
-                className="bg-transparent outline-none text-sm w-full ml-3 placeholder-gray-500"
+                onChange={(e) => handleInputChange("tanggal", e.target.value)}
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-6 relative">
+            {/* Ringkasan Box */}
+            <div className="bg-[#f0f4e4] border-l-4 border-[#7a8c2e] rounded-xl p-4 mb-6">
+              <h4 className="font-bold text-[#3a4e10] text-[10px] uppercase tracking-widest mb-1">
+                Ringkasan
+              </h4>
+              <p className="text-gray-700 text-xs font-semibold">
+                {formData.nama_komoditas || "..."}, {formData.jumlah || "0"} Kg,
+                Grade {formData.kualitas}
+              </p>
+            </div>
+
+            {/* Dropdown Kualitas */}
             <div className="relative">
+              <label className="text-[10px] text-gray-400 font-bold ml-1 mb-1 block uppercase">
+                Kualitas
+              </label>
               <div
-                onClick={() => { setShowKualitas(!showKualitas); setShowStatus(false); }}
-                className="flex justify-between items-center bg-[#9aaa3f] text-white px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer"
+                onClick={() => setShowKualitas(!showKualitas)}
+                className="flex justify-between items-center bg-[#7a8c2e] text-white px-4 py-3 rounded-2xl text-sm font-bold cursor-pointer"
               >
-                <span>{formData.kualitas}</span>
-                <IconChevron isOpen={showKualitas} />
+                <span>Grade {formData.kualitas}</span>
+                <Icon icon="mdi:chevron-down" />
               </div>
               {showKualitas && (
-                <div className="absolute top-[100%] left-0 w-full bg-[#e6ead1] border border-[#9aaa3f] mt-1 rounded-xl overflow-hidden z-20 shadow-lg">
-                  {listKualitas.map(item => (
+                <div className="absolute top-[100%] left-0 w-full bg-white border border-gray-100 mt-2 rounded-2xl shadow-xl z-30 overflow-hidden">
+                  {listKualitas.map((q) => (
                     <div
-                      key={item}
-                      onClick={() => handleSelectKualitas(item)}
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-[#9aaa3f] hover:text-white border-b border-[#9aaa3f]/30 last:border-0 cursor-pointer"
+                      key={q}
+                      onClick={() => {
+                        handleInputChange("kualitas", q);
+                        setShowKualitas(false);
+                      }}
+                      className="px-4 py-3 text-sm hover:bg-[#f0f4e4] cursor-pointer"
                     >
-                      {item}
+                      Grade {q}
                     </div>
                   ))}
                 </div>
               )}
             </div>
-
-            <div className="relative">
-              <div
-                onClick={() => { setShowStatus(!showStatus); setShowKualitas(false); }}
-                className="flex justify-between items-center bg-[#9aaa3f] text-white px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer"
-              >
-                <span>{formData.status}</span>
-                <IconChevron isOpen={showStatus} />
-              </div>
-              {showStatus && (
-                <div className="absolute top-[100%] left-0 w-full bg-[#e6ead1] border border-[#9aaa3f] mt-1 rounded-xl overflow-hidden z-20 shadow-lg">
-                  {listStatus.map(item => (
-                    <div
-                      key={item}
-                      onClick={() => handleSelectStatus(item)}
-                      className="px-4 py-2 text-sm text-gray-700 hover:bg-[#9aaa3f] hover:text-white border-b border-[#9aaa3f]/30 last:border-0 cursor-pointer"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-[#e6ead1] border border-[#7a8c2e] rounded-2xl p-4 mb-6">
-            <h4 className="font-bold text-gray-800 text-sm">Ringkasan Permintaan</h4>
-            <p className="text-gray-600 text-[13px]">
-              {formData.nama_komoditas || 'Pilih Komoditas'}, {formData.jumlah || '0'} Kg, {formData.kualitas}
-            </p>
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-[#9aaa3f] text-white py-4 rounded-3xl font-bold text-lg shadow-md hover:bg-[#899935] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-[#3a4e10] text-white py-4 rounded-2xl font-bold text-base shadow-lg active:scale-95 transition-all disabled:opacity-50"
           >
-            {loading ? 'Mengajukan...' : 'Ajukan Permintaan Beli'}
+            {loading ? "Memproses..." : "Ajukan Permintaan Beli"}
           </button>
-
-          <div className="text-center mt-6">
-            <p className="text-[10px] text-gray-400">Data Anda akan divalidasi oleh sistem</p>
-            <button className="text-[12px] font-bold border-b border-gray-800 text-gray-800 mt-1">
-              Klik untuk bantuan
-            </button>
-          </div>
         </div>
       </div>
+
+      {/* --- OVERLAY: MENCARI PETANI --- */}
+      {isMatching && (
+        <div className="fixed inset-0 bg-[#7a8c2e]/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center text-white px-10 text-center">
+          <div className="relative mb-6">
+            <div className="w-24 h-24 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center text-3xl">
+              🔍
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold mb-2">Menganalisis Stok...</h2>
+          {/* GANTI KALIMAT DI BAWAH INI */}
+          <p className="text-sm opacity-80 italic">
+            Sistem sedang mencocokkan permintaan Anda dengan seluruh database
+            mitra petani kami...
+          </p>
+        </div>
+      )}
+
+      {/* --- MODAL HASIL MATCHING (Dinamis) --- */}
+      {showResult && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center px-6">
+          <div className="bg-white w-full max-w-sm rounded-[35px] p-8 text-center shadow-2xl animate-in zoom-in duration-300">
+            {/* KONDISI A: STOK DITEMUKAN (PETANI > 0) */}
+            {matchData?.list_petani?.length > 0 ? (
+              <>
+                <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                  ✅
+                </div>
+                <h2 className="text-xl font-black text-gray-800 mb-1">
+                  Permintaan Cocok!
+                </h2>
+                <p className="text-xs text-gray-500 mb-6">
+                  Kami menemukan stok dari{" "}
+                  <span className="font-bold text-[#7a8c2e]">
+                    {matchData.list_petani.length} Petani
+                  </span>
+                  . Total terkumpul:{" "}
+                  <span className="font-bold text-gray-800">
+                    {matchData.total_ditemukan} Kg
+                  </span>
+                  .
+                </p>
+                <button
+                  onClick={() => navigate("/riwayat-pedagang")}
+                  className="w-full bg-[#3a4e10] text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition-all"
+                >
+                  Lihat Hasil Matching
+                </button>
+              </>
+            ) : (
+              /* KONDISI B: STOK TIDAK DITEMUKAN (KOSONG) */
+              <>
+                <div className="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                  ❌
+                </div>
+                <h2 className="text-xl font-black text-gray-800 mb-1">
+                  Stok Belum Tersedia
+                </h2>
+                <p className="text-xs text-gray-500 mb-6">
+                  Maaf, saat ini belum ada petani yang memiliki stok{" "}
+                  <span className="font-bold text-red-600">
+                    {formData.nama_komoditas} Grade {formData.kualitas}
+                  </span>
+                  .
+                </p>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => {
+                      setShowResult(false);
+                      setFormData({ ...formData, nama_komoditas: "" }); // Reset nama untuk coba lagi
+                    }}
+                    className="w-full bg-gray-100 text-gray-700 py-4 rounded-2xl font-bold active:scale-95 transition-all"
+                  >
+                    Coba Komoditas Lain
+                  </button>
+                  <button
+                    onClick={() => navigate("/riwayat-pedagang")}
+                    className="w-full text-[#7a8c2e] py-2 text-xs font-bold underline"
+                  >
+                    Tetap Simpan di Riwayat
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <BottomNav role="pedagang" />
     </div>

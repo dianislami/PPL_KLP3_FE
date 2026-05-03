@@ -20,13 +20,22 @@ api.interceptors.request.use((config) => {
 
 // API endpoints untuk User/Auth
 export const authAPI = {
-  register: (data: { nama: string; email: string; password: string; role: string }) =>
-    api.post('/users/register', data),
-  getUsers: () => api.get('/users'),
-  updateUser: (id: string, data: { nama: string; email: string }) =>
-    api.put(`/users/${id}`, data),
-  changePassword: (id: string, data: { passwordLama: string; passwordBaru: string }) =>
-    api.post(`/users/${id}/change-password`, data),
+  register: (data: {
+    nama: string;
+    email: string;
+    password: string;
+    role: string;
+    alamat: string;
+  }) => api.post("/users/register", data),
+  getUsers: () => api.get("/users"),
+  updateUser: (
+    id: string,
+    data: { nama: string; email: string; alamat?: string },
+  ) => api.put(`/users/${id}`, data),
+  changePassword: (
+    id: string,
+    data: { passwordLama: string; passwordBaru: string },
+  ) => api.post(`/users/${id}/change-password`, data),
 };
 
 // API endpoints untuk Hasil Panen (Petani)
@@ -47,11 +56,13 @@ export const permintaanAPI = {
   getAll: () => api.get('/permintaan'),
   getById: (id: string) => api.get(`/permintaan/${id}`),
   match: (id: string, matchData: any) => api.post(`/permintaan/match/${id}`, matchData),
+  konfirmasi: (id: string, tindakan: 'setuju' | 'batal') => api.put(`/permintaan/konfirmasi/${id}`, { tindakan }),
 };
 
 // API endpoints untuk Weather
+// src/services/api.ts
 export const weatherAPI = {
-  get: () => api.get('/weather'),
+  get: (city: string) => api.get(`/weather?city=${city}`), 
 };
 
 export default api;

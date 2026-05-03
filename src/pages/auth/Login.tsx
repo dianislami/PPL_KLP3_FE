@@ -50,9 +50,10 @@ export default function Login() {
           nama: user.nama,
           email: user.email,
           role: user.role,
+          alamat: user.alamat,
           created_at: user.created_at,
         },
-        token
+        token,
       );
 
       if (userType === 'petani') navigate('/dashboard-petani');
