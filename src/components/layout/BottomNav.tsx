@@ -19,9 +19,10 @@ export default function BottomNav({ role = 'petani' }: BottomNavProps) {
 
   const pedagangNavItems = [
     { id: 'home', label: 'Beranda', icon: 'mdi:home', path: '/dashboard-pedagang' },
-    { id: 'daftar', label: 'Daftar Panen', icon: 'mdi:list', path: '/daftar-panen' },
-    { id: 'kebutuhan', label: 'Kebutuhan', icon: 'mdi:plus-circle', path: '/input-kebutuhan' },
-    { id: 'matching', label: 'Matching', icon: 'mdi:link', path: '/hasil-matching' },
+    { id: 'kebutuhan', label: 'Kebutuhan', icon: 'mdi:cart-plus', path: '/input-kebutuhan' },
+    { id: 'hasil', label: 'Hasil Panen', icon: 'mdi:clipboard-list-outline', path: '/hasil-panen' },
+    { id: 'riwayat', label: 'Riwayat', icon: 'mdi:history', path: '/riwayat-pedagang' },
+    { id: 'profile', label: 'Profil', icon: 'mdi:account', path: '/profil-pedagang' },
   ];
 
   const navItems = role === 'petani' ? petaniNavItems : pedagangNavItems;
@@ -35,7 +36,7 @@ export default function BottomNav({ role = 'petani' }: BottomNavProps) {
   };
 
   return (
-    <div className="fixed bottom-1 left-1 right-1 bg-black rounded-full px-2 py-2 flex justify-between items-center shadow-2xl">
+    <div className="fixed bottom-1 left-1 right-1 z-50 bg-black rounded-full px-2 py-2 flex justify-between items-center shadow-2xl pointer-events-auto">
       {navItems.map((item) => (
         <button
           key={item.id}

@@ -44,6 +44,7 @@ interface PanenItem {
   nama_komoditas?: string;
   nama?: string;
   jumlah: number;
+  harga?: number;
   kualitas: string;
   status: string;
   tanggal: string;
@@ -250,10 +251,10 @@ export default function PemulihanPanen() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="text-[10px] text-gray-400 mb-1">#{itemId.substring(0, 8)}</p>
                       <p className="text-base font-bold text-gray-900">
                         {item.nama_komoditas || item.nama || 'Panen'}, {item.jumlah} Kg
                       </p>
+                      <p className="text-sm text-gray-500">Harga: {item.harga ? `Rp ${item.harga.toLocaleString('id-ID')}/Kg` : '-'}</p>
                       <p className="text-sm text-gray-500">Kualitas: {item.kualitas}</p>
                       {item.recovery?.jenis && (
                         <span className={`inline-block text-[10px] font-bold px-2.5 py-1 rounded-full mt-1.5 ${

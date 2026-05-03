@@ -1,3 +1,5 @@
+import BottomNav from '../../components/layout/BottomNav';
+
 const IconCheckStatus = () => (
   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="10" fill="#4CAF50"/>
@@ -104,18 +106,8 @@ export default function StatusPengiriman() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 w-full bg-black rounded-t-[40px] h-20 flex items-center justify-around px-2 z-50">
-        <div className="text-2xl cursor-pointer">🏠</div>
-        <div className="text-2xl cursor-pointer">➕</div>
-        <div className="text-2xl cursor-pointer">👥</div>
-        <div className="text-2xl cursor-pointer">🕒</div>
 
-        {/* Menu Aktif */}
-        <div className="bg-[#5a7a00] rounded-3xl px-6 py-1.5 flex flex-col items-center cursor-pointer">
-          <span className="text-white text-xl font-bold leading-none">✅</span>
-          <span className="text-white text-[10px] font-bold uppercase tracking-wider mt-0.5">Status</span>
-        </div>
-      </div>
+      <BottomNav role="pedagang" />
 
     </div>
   );

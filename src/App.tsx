@@ -11,10 +11,14 @@ import StatusPengiriman from "./pages/petani/StatusPengiriman";
 import DetailArtikel from "./pages/petani/DetailArtikel";
 import Chat from "./pages/petani/Chat";
 import ProfilPetani from "./pages/petani/ProfilPetani";
+import DashboardPedagang from "./pages/pedagang/DashboardPedagang";
+import ProfilPedagang from "./pages/pedagang/ProfilPedagang";
 import InputKebutuhan from "./pages/pedagang/InputKebutuhan";
 import DaftarPanen from "./pages/pedagang/DaftarPanen";
 import HasilMatching from "./pages/pedagang/HasilMatching";
+import RiwayatPedagang from "./pages/pedagang/RiwayatPedagang";
 import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang";
+import DetailProduk from "./pages/pedagang/DetailProduk";
 import UbahKataSandi from "./pages/petani/UbahKataSandi";
 
 export default function App() {
@@ -31,8 +35,13 @@ export default function App() {
       <Route path="/profil-petani" element={<ProfilPetani />} />
       <Route path="/ubah-kata-sandi" element={<UbahKataSandi />} />
       <Route path="/status-pengiriman" element={<StatusPengiriman />} />
+      <Route path="/dashboard-pedagang" element={<DashboardPedagang />} />
+      <Route path="/profil-pedagang" element={<ProfilPedagang />} />
       <Route path="/input-kebutuhan" element={<InputKebutuhan />} />
+      <Route path="/riwayat-pedagang" element={<RiwayatPedagang />} />
+      <Route path="/hasil-panen" element={<DaftarPanen />} />
       <Route path="/daftar-panen" element={<DaftarPanen />} /> 
+      <Route path="/detail-produk/:id" element={<DetailProduk />} />
       <Route path="/detail-artikel/:id" element={<DetailArtikel />} />
       <Route path="/chat/:nama?" element={<Chat />} />
       <Route path="/hasil-matching" element={<HasilMatching />} /> 

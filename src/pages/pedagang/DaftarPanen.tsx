@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { panenAPI } from '../../services/api';
+import BottomNav from '../../components/layout/BottomNav';
 
 const IconChevronDown = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -9,13 +11,16 @@ interface PanenItem {
   _id: string;
   nama_komoditas: string;
   jumlah: number;
+  harga?: number;
   kualitas: string;
   tanggal: string;
   foto: { path: string }[];
+  user_id?: { nama: string };
   recovery?: { jenis?: 'pakan' | 'kompos' };
 }
 
 export default function DaftarPanen() {
+  const navigate = useNavigate();
   const [dataPanen, setDataPanen] = useState<PanenItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -93,7 +98,11 @@ export default function DaftarPanen() {
         ) : (
           <div className="grid grid-cols-2 gap-4">
             {dataPanen.map((item) => (
-              <div key={item._id} className="relative h-60 rounded-[35px] overflow-hidden shadow-lg bg-gray-200 group">
+              <button
+                key={item._id}
+                onClick={() => navigate(`/detail-produk/${item._id}`)}
+                className="relative h-60 rounded-[35px] overflow-hidden shadow-lg bg-gray-200 group text-left active:scale-95 transition-transform"
+              >
                 <img 
                   src={getImageUrl(item.foto)} 
                   alt={item.nama_komoditas} 
@@ -120,29 +129,16 @@ export default function DaftarPanen() {
                     <span className="text-[10px] opacity-80">{getMonthName(item.tanggal)}</span>
                   </div>
                   <p className="text-lg font-bold mt-1">{item.jumlah} Kg</p>
+                  <p className="text-[10px] opacity-75 mt-0.5">Harga: {item.harga ? `Rp ${item.harga.toLocaleString('id-ID')}/Kg` : '-'}</p>
                   <p className="text-[10px] opacity-75 mt-0.5">Kualitas: {item.kualitas}</p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 w-full bg-black rounded-t-[40px] h-20 flex items-center justify-around px-2 z-50">
-        
-        <div className="text-2xl cursor-pointer">🏠</div>
-        <div className="text-2xl cursor-pointer">➕</div>
-
-        {/* Menu Aktif */}
-        <div className="bg-[#5a7a00] rounded-3xl px-6 py-1.5 flex flex-col items-center cursor-pointer">
-          <span className="text-white text-xl font-bold leading-none">👥</span>
-          <span className="text-white text-[10px] font-bold uppercase tracking-wider mt-0.5">Daftar Panen</span>
-        </div>
-        
-        <div className="text-2xl cursor-pointer">🕒</div>
-        <div className="text-2xl cursor-pointer">✅</div>
-      </div>
+      <BottomNav role="pedagang" />
 
     </div>
   );

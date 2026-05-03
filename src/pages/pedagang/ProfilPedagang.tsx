@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '../../components/layout/BottomNav';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../../context/AuthContext';
-import { panenAPI, authAPI } from '../../services/api';
+import { authAPI } from '../../services/api';
 
 const ICONS = {
-  total: 'mdi:sprout',
-  panen: 'mdi:trophy',
+  total: 'mdi:store-outline',
+  panen: 'mdi:shopping-bag-outline',
   status: 'mdi:account-check',
   edit: 'mdi:pencil',
   nama: 'mdi:account-outline',
@@ -19,12 +19,11 @@ const ICONS = {
   logout: 'mdi:logout',
 };
 
-export default function ProfilPetani() {
+export default function ProfilPedagang() {
   const navigate = useNavigate();
   const { user, logout, updateUser } = useAuth();
   const [editMode, setEditMode] = useState(false);
-  const [panenCount, setPanenCount] = useState(0);
-  const [totalHarvest, setTotalHarvest] = useState(0);
+
   const [editData, setEditData] = useState({
     nama: user?.nama || '',
     email: user?.email || '',
@@ -32,27 +31,11 @@ export default function ProfilPetani() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState({ type: '', text: '' });
 
-  // Format tanggal bergabung
   const joinDateFormatted = user?.created_at
     ? new Date(user.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })
     : 'Tanggal tidak tersedia';
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await panenAPI.getAll();
-        const userPanen = response.data.filter((item: any) => item.user_id?._id === user?.id);
-        setPanenCount(userPanen.length);
-        setTotalHarvest(userPanen.reduce((sum: number, item: any) => sum + item.jumlah, 0) / 1000);
-      } catch (error) {
-        console.error('Failed to fetch stats:', error);
-      }
-    };
-
-    if (user?.id) {
-      fetchStats();
-    }
-  }, [user?.id]);
+  
 
   const handleEditChange = (field: string, value: string) => {
     setEditData(prev => ({
@@ -66,7 +49,6 @@ export default function ProfilPetani() {
     setSaveMessage({ type: '', text: '' });
 
     try {
-      // Validasi
       if (!editData.nama.trim()) {
         setSaveMessage({ type: 'error', text: 'Nama tidak boleh kosong' });
         setSaveLoading(false);
@@ -79,14 +61,12 @@ export default function ProfilPetani() {
         return;
       }
 
-      // Call API to update user
       if (user?.id) {
         await authAPI.updateUser(user.id, {
           nama: editData.nama,
           email: editData.email,
         });
 
-        // Update user context
         updateUser({
           nama: editData.nama,
           email: editData.email,
@@ -106,12 +86,6 @@ export default function ProfilPetani() {
     }
   };
 
-  const statData = [
-    { label: 'Total Panen',  value: `${panenCount}`, icon: ICONS.panen },
-    { label: 'Total Hasil',  value: `${totalHarvest.toFixed(1)} Ton`,    icon: ICONS.total },
-    { label: 'Status',       value: 'Aktif',  icon: ICONS.status },
-  ];
-
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -125,7 +99,7 @@ export default function ProfilPetani() {
         <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-4xl font-bold">Profil</h1>
-            <p className="text-sm opacity-80">Data Petani Anda</p>
+            <p className="text-sm opacity-80">Data Pedagang Anda</p>
           </div>
           <button
             onClick={() => {
@@ -150,12 +124,12 @@ export default function ProfilPetani() {
         {/* Avatar */}
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-[#9aaa3f] border-4 border-white/40 flex items-center justify-center text-5xl shadow-lg mb-3">
-            👨‍🌾
+            🏪
           </div>
-          <p className="text-lg font-bold">{user?.nama || 'Petani'}</p>
+          <p className="text-lg font-bold">{user?.nama || 'Pedagang'}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
-            <p className="text-xs opacity-80">Petani Aktif</p>
+            <p className="text-xs opacity-80">Pedagang Aktif</p>
           </div>
         </div>
       </div>
@@ -163,24 +137,8 @@ export default function ProfilPetani() {
       {/* Content */}
       <div className="flex-1 bg-white rounded-t-3xl overflow-y-auto pb-28">
 
-        {/* Stats Bar */}
-        <div className="grid grid-cols-3 gap-0 border-b border-gray-100 mx-4 mt-5 mb-5 bg-[#f5f7ee] rounded-2xl overflow-hidden">
-          {statData.map((s, i) => (
-            <div
-              key={s.label}
-              className={`text-center py-4 ${i !== statData.length - 1 ? 'border-r border-white' : ''}`}
-            >
-              <div className="flex justify-center mb-1">
-                <Icon icon={s.icon} className="text-xl text-[#7a8c2e]" />
-              </div>
-              <p className="text-sm font-bold text-[#3a4e10] mt-0.5">{s.value}</p>
-              <p className="text-[10px] text-gray-400">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
         {/* Info Cards - Editable */}
-        <div className="px-4 mb-6">
+        <div className="px-4 my-6">
           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">
             Informasi Pribadi
           </p>
@@ -260,7 +218,7 @@ export default function ProfilPetani() {
             </div>
           </div>
 
-          {/* Save Button - positioned below edit section */}
+          {/* Save Button */}
           {editMode && (
             <div className="flex gap-2 mt-4">
               <button
@@ -296,24 +254,23 @@ export default function ProfilPetani() {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl px-4 py-3 text-left active:scale-95 transition-all mt-1"
+              className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-left active:scale-95 transition-all"
             >
               <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center text-base flex-shrink-0">
                 <Icon icon={ICONS.logout} className="text-red-600 text-lg" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-red-600">Keluar</p>
-                <p className="text-[10px] text-red-400">Logout dari akun ini</p>
+                <p className="text-[10px] text-red-500">Logout dari akun Anda</p>
               </div>
               <span className="text-red-300 text-lg">›</span>
             </button>
           </div>
         </div>
 
-        <p className="text-center text-[10px] text-gray-300 pb-4">Smart Harvest v1.0.0</p>
       </div>
 
-      <BottomNav role="petani" />
+      <BottomNav role="pedagang" />
     </div>
   );
 }
