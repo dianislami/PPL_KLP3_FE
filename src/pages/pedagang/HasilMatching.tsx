@@ -50,7 +50,7 @@ export default function HasilMatching() {
     try {
       await api.put(`/permintaan/konfirmasi/${id}`, { tindakan });
       alert(tindakan === "setuju" ? "Pesanan Berhasil!" : "Pesanan Dibatalkan");
-      navigate("/riwayat-pedagang");
+      navigate("/riwayat-pedagang?tab=selesai");
     } catch (err) {
       alert("Gagal memproses");
     }
@@ -67,14 +67,17 @@ export default function HasilMatching() {
   return (
     <div className="w-full min-h-screen bg-[#F5F5F5] flex flex-col font-sans pb-28 relative">
       {/* 1. Header Section - Samakan dengan halaman lain agar CV & Alamat muncul */}
-      <div className="bg-[#7a8c2e] px-5 pt-10 pb-12 text-white relative flex-shrink-0">
-        <div className="flex justify-between items-start mb-4">
-          <h1 className="text-3xl font-bold uppercase">
-            Hallo, {user?.nama ? user.nama.split(" ")[0] : "Seller"}
+      <div className="bg-[#7a8c2e] px-5 pt-10 pb-6 text-white relative flex-shrink-0">
+        <div className="flex gap-3 items-center mb-3">
+          <button
+            onClick={() => navigate("/riwayat-pedagang?tab=selesai")}
+            className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center active:scale-95 transition-all"
+          >
+            <span className="text-gray-700 font-bold text-lg leading-none">‹</span>
+          </button>
+          <h1 className="text-2xl font-bold uppercase">
+            Status Pemesanan
           </h1>
-          <div className="w-10 h-10 rounded-full bg-[#9aaa3f] flex items-center justify-center text-xl shadow-md">
-            🏪
-          </div>
         </div>
         <div className="flex items-start gap-2 bg-white/10 p-3 rounded-2xl border border-white/10">
           <Icon icon="mdi:map-marker" className="text-xl text-[#dce6a7]" />

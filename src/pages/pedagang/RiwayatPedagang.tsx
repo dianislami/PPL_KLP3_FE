@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import BottomNav from "../../components/layout/BottomNav";
 import { useAuth } from "../../context/AuthContext";
 import { permintaanAPI } from "../../services/api";
@@ -9,6 +9,7 @@ type StatusFilter = "Selesai" | "Pending" | "Dibatalkan";
 
 export default function RiwayatPedagang() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const [riwayat, setRiwayat] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,16 @@ export default function RiwayatPedagang() {
     };
     if (user?.id) fetchRiwayat();
   }, [user]);
+
+  // Sync tab with URL query param ?tab=selesai|pending|dibatalkan
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = (params.get("tab") || "").toLowerCase();
+    if (tab === "selesai") setStatusFilter("Selesai");
+    else if (tab === "pending") setStatusFilter("Pending");
+    else if (tab === "dibatalkan" || tab === "batal")
+      setStatusFilter("Dibatalkan");
+  }, [location.search]);
 
   // LOGIKA PENGELOMPOKKAN STATUS AGAR TIDAK SALAH TAB
   const getDisplayStatus = (status: string): StatusFilter => {
