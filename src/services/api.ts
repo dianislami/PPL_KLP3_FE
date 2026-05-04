@@ -37,6 +37,9 @@ export const authAPI = {
     id: string,
     data: { passwordLama: string; passwordBaru: string },
   ) => api.post(`/users/${id}/change-password`, data),
+
+  // Hapus user
+  deleteUser: (id: string) => api.delete(`/users/${id}`),
 };
 
 // API endpoints untuk Hasil Panen (Petani)

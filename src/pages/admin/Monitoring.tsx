@@ -11,22 +11,7 @@ import {
 } from "recharts";
 import { panenAPI } from "../../services/api";
 
-interface StatCardProps {
-  title: string;
-  value: string;
-  subtitle?: string;
-}
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle }) => {
-  return (
-    <div className="stat">
-      <div className="stat-title">{title}</div>
-      <h2>
-        {value} {subtitle && <span>{subtitle}</span>}
-      </h2>
-    </div>
-  );
-};
 
 
 const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
@@ -83,17 +68,26 @@ const MonitoringPage: React.FC = () => {
       </div>
 
       {/* TITLE */}
-      <div className="title">Monitoring Dashboard & Analitik</div>
+      <div className="title" style={{ fontSize: 18, fontWeight: 700, marginBottom: 14 }}>Monitoring Dashboard & Analitik</div>
 
       {/* CARD */}
       <div className="card">
-        <h3>Analitik Transaksi & Panen Sirkular</h3>
+        <h4 style={{ fontSize: 18, fontWeight: 700, marginBottom: 14 }}>Analitik Transaksi & Panen Sirkular</h4>
 
         {/* STATS */}
         <div className="stats">
-          <StatCard title="Total Panen" value={totalPanen.toFixed(1)} subtitle="Ton" />
-          <StatCard title="Transaksi" value={totalTransaksi.toString()} />
-          <StatCard title="Recovery" value={totalRecovery.toFixed(1)} subtitle="Ton" />
+          <div className="stat">
+            <p style={{ fontSize: 15, fontWeight: 600 }}>Total Panen</p>
+            <h2 style={{ fontSize: 22, fontWeight: 700 }}>{totalPanen.toFixed(1)} <span style={{fontSize:13, fontWeight:400}}>Ton</span></h2>
+          </div>
+          <div className="stat">
+            <p style={{ fontSize: 15, fontWeight: 600 }}>Transaksi</p>
+            <h2 style={{ fontSize: 22, fontWeight: 700 }}>{totalTransaksi}</h2>
+          </div>
+          <div className="stat">
+            <p style={{ fontSize: 15, fontWeight: 600 }}>Recovery</p>
+            <h2 style={{ fontSize: 22, fontWeight: 700 }}>{totalRecovery.toFixed(1)} <span style={{fontSize:13, fontWeight:400}}>Ton</span></h2>
+          </div>
         </div>
 
         {/* CHART */}
