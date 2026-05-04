@@ -26,6 +26,21 @@ export const getBackendOrigin = () => getApiUrl().replace(/\/api\/?$/, '');
 
 const API_BASE_URL = getApiUrl();
 
+export const getImageUrl = (path: string): string => {
+  if (!path) return '';
+  
+  // Kalau sudah full URL (http/https), replace origin-nya saja jika localhost
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path.replace(
+      /^https?:\/\/(localhost|127\.0\.0\.1):\d+/,
+      getBackendOrigin()
+    );
+  }
+  
+  // Kalau path relatif (/uploads/...), prepend origin
+  return `${getBackendOrigin()}${path}`;
+};
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
