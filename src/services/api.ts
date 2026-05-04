@@ -1,6 +1,22 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Logic untuk auto-detect URL backend
+const getApiUrl = () => {
+  // 1. Cek environment variable (dari Vercel atau .env.local)
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // 2. Jika di localhost/development, pakai localhost
+  if (import.meta.env.DEV) {
+    return 'http://localhost:5000/api';
+  }
+  
+  // 3. Fallback ke Railway production
+  return 'https://smart-harvest-production.up.railway.app/api';
+};
+
+const API_BASE_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
