@@ -44,11 +44,11 @@ function parseProduk(pesan: string) {
 
 // ── Warna per grade ──
 const paletteMap: Record<string, { bg: string; light: string }> = {
-  'Grade A':  { bg: '#7a8c2e', light: '#f0fdf4' },
-  'Grade B':  { bg: '#d9f948', light: '#fffbeb' },
+  'Grade A':  { bg: '#16a34a', light: '#f0fdf4' },
+  'Grade B':  { bg: '#d97706', light: '#fffbeb' },
   'Grade C':  { bg: '#dc2626', light: '#fff1f1' },
-  'A':        { bg: '#7a8c2e', light: '#f0fdf4' },
-  'B':        { bg: '#d9f948', light: '#fffbeb' },
+  'A':        { bg: '#16a34a', light: '#f0fdf4' },
+  'B':        { bg: '#d97706', light: '#fffbeb' },
   'C':        { bg: '#dc2626', light: '#fff1f1' },
 };
 
@@ -242,9 +242,9 @@ export default function ChatPedagang() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-12 left-4 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all active:scale-95"
+          className="fixed top-12 left-4 w-10 h-10 bg-[#7a8c2e] rounded-full flex items-center justify-center hover:bg-white/30 transition-all active:scale-95 z-50"
         >
-          <span className="text-white font-bold text-lg leading-none">‹</span>
+          <span className="text-white font-bold text-2xl leading-none">‹</span>
         </button>
 
         <div className="flex flex-col items-center w-full">

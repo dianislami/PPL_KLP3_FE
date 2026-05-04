@@ -210,9 +210,9 @@ export default function ChatPetani() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-12 left-4 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all active:scale-95"
+          className="fixed top-12 left-4 w-10 h-10 bg-[#7a8c2e] rounded-full flex items-center justify-center hover:bg-white/30 transition-all active:scale-95 z-50" 
         >
-          <span className="text-white font-bold text-lg leading-none">‹</span>
+          <span className="text-white font-bold text-2xl leading-none">‹</span>
         </button>
 
         <div className="flex flex-col items-center w-full">
