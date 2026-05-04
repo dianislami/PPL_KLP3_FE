@@ -103,26 +103,12 @@ export default function StatusPengiriman() {
     return null;
   };
 
-  const getPetaniInfo = () => {
-    if (permintaan.matches && permintaan.matches.length > 0) {
-      const firstMatch = permintaan.matches[0];
-      const panenItem = panenList.find(p => p._id === firstMatch.hasil_panen_id);
-      return {
-        nama: firstMatch.petani_nama || panenItem?.user_id?.nama || 'Petani',
-        alamat: firstMatch.lokasi || panenItem?.user_id?.alamat || 'Lokasi Petani',
-      };
-    }
-    return { nama: 'Petani', alamat: 'Lokasi Petani' };
-  };
-
-  const petaniInfo = getPetaniInfo();
-
   const steps: Step[] = [
     {
       id: 1,
       status: 'done',
       title: 'Diambil',
-      desc: `Dari ${petaniInfo.alamat}, ${new Date(permintaan.tanggal).toLocaleTimeString('id-ID')} WIB`,
+      desc: `Dari Petani Penyuplai, ${new Date(permintaan.tanggal).toLocaleTimeString('id-ID')} WIB`,
     },
     {
       id: 2,
@@ -166,30 +152,48 @@ export default function StatusPengiriman() {
       {/* Content */}
       <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-8 overflow-y-auto pb-30 px-5">
 
-        {/* Produk Card */}
+        {/* Header: Produk & Total Jumlah */}
+        <div className="bg-white border border-gray-100 rounded-[30px] p-4 mb-6 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-gray-100 overflow-hidden flex-shrink-0 shadow-inner">
+              {getProdukFoto() ? (
+                <img src={getProdukFoto()!} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-[#eaf0d8] flex items-center justify-center text-2xl">
+                  🌾
+                </div>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-gray-800 text-sm uppercase truncate">
+                {permintaan.nama_komoditas}
+              </p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase mt-0.5">
+                {permintaan.jumlah} Kg Total
+              </p>
+              <p className="text-[10px] text-gray-500 font-semibold mt-1">
+                Dari {permintaan.matches?.length || 0} Petani Penyuplai
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Supplier List - Show all matches with their quantities */}
         {permintaan.matches && permintaan.matches.length > 0 && (
-          <div className="bg-white border border-gray-100 rounded-[30px] p-4 mb-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gray-100 overflow-hidden flex-shrink-0 shadow-inner">
-                {getProdukFoto() ? (
-                  <img src={getProdukFoto()!} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-[#eaf0d8] flex items-center justify-center text-2xl">
-                    🌾
+          <div className="mb-6">
+            <p className="text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Petani Penyuplai</p>
+            <div className="space-y-2">
+              {permintaan.matches.map((match: any, idx: number) => (
+                <div key={idx} className="bg-[#f9faf5] rounded-2xl p-3 border border-gray-100 flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#7a8c2e] flex items-center justify-center text-white font-bold flex-shrink-0">
+                    {match.petani_nama?.charAt(0).toUpperCase() || 'P'}
                   </div>
-                )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-bold text-gray-800 text-sm uppercase truncate">
-                  {permintaan.nama_komoditas}
-                </p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase mt-0.5">
-                  {permintaan.matches[0]?.jumlah_diambil || permintaan.jumlah} Kg
-                </p>
-                <p className="text-[10px] text-gray-500 font-semibold mt-1">
-                  Petani: {permintaan.matches[0]?.petani_nama || 'Petani'}
-                </p>
-              </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-gray-800 text-sm truncate">{match.petani_nama}</p>
+                    <p className="text-[10px] text-gray-500">Stok: <span className="font-bold text-[#7a8c2e]">{match.jumlah_diambil} Kg</span> · {match.lokasi}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

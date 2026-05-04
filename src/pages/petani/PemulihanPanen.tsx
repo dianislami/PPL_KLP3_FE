@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import BottomNav from '../../components/layout/BottomNav';
+import { useAuth } from '../../context/AuthContext';
 import { panenAPI } from '../../services/api';
 import { Icon } from '@iconify/react';
 
@@ -71,19 +72,28 @@ export default function PemulihanPanen() {
   const [showRecoveryModal, setShowRecoveryModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    fetchPanen();
-  }, []);
+    if (user?.id) fetchPanen();
+  }, [user]);
 
   const fetchPanen = async () => {
     try {
       setLoading(true);
       const response = await panenAPI.getAll();
       // Filter hanya grade C dan yang belum ada recovery
-      const gradeCPanen = (response.data || []).filter((item: PanenItem) => {
-        const quality = item.kualitas?.toLowerCase() || '';
+      const allItems: PanenItem[] = response.data || [];
+      const gradeCPanen = allItems.filter((item: PanenItem & any) => {
+        // Pastikan hanya data milik petani yang sedang login
+        const ownerId = item.user_id?._id || item.user_id || item.user?._id || item.user?.id;
+        if (!user?.id || !ownerId) return false;
+        if (String(ownerId) !== String(user.id)) return false;
+
+        const quality = (item.kualitas || '').toLowerCase();
         return quality.includes('c') || quality.includes('rusak');
       });
+
       setPanenData(gradeCPanen);
     } catch (error) {
       console.error('Error fetching panen:', error);
