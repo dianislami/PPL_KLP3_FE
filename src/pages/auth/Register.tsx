@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import { Icon } from '@iconify/react';
 import { authAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import loginImg from '../../assets/images/login.png';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function Register() {
         style={{ height: "230px" }}
       >
         <img
-          src="src/assets/images/login.png"
+          src={loginImg}
           alt="Smart Harvest"
           className="w-full h-full object-cover"
         />

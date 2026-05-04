@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import "./Home-desktop.css";
+import card1 from "./assets/images/card1.jpg";
+import landingpage from "./assets/images/Landingpage.jpg";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ export default function Home() {
       {/* HERO */}
       <div className="hero">
         <img
-          src="/src/assets/images/Landingpage.jpg"
+          src={landingpage}
           className="hero-img"
           alt="hero"
         />
@@ -46,7 +48,7 @@ export default function Home() {
 
           {/* CENTER IMAGE */}
           <div className="img-card center">
-            <img src="/src/assets/images/card1.jpg" alt="center" />
+            <img src={card1} alt="center" />
           </div>
 
           {/* RIGHT CARD */}

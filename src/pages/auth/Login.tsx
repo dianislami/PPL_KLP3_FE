@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../../context/AuthContext';
 import { authAPI } from '../../services/api';
+import loginImg from '../../assets/images/login.png';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function Login() {
       {/* Hero Image + Wave */}
       <div className="relative w-full flex-shrink-0" style={{ height: '230px' }}>
         <img
-          src="src/assets/images/login.png"
+          src={loginImg}
           alt="Smart Harvest"
           className="w-full h-full object-cover"
         />
