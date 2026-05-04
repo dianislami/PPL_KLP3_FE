@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { panenAPI, permintaanAPI } from "../../services/api";
 import { Icon } from "@iconify/react";
+import { getBackendOrigin } from "../../services/api";
 
 type Tab = "panen" | "penjualan";
 
@@ -209,7 +210,7 @@ export default function RiwayatPanen() {
                       <img
                         src={
                           item.foto && item.foto.length > 0
-                            ? `http://localhost:5000${item.foto[0].path}`
+                            ? `${getBackendOrigin()}${item.foto[0].path}`
                             : "/images/default-panen.jpg"
                         }
                         className="w-full h-full object-cover"
