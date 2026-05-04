@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import BottomNav from "../../components/layout/BottomNav";
 import { useAuth } from "../../context/AuthContext";
 import { permintaanAPI } from "../../services/api";
 import { Icon } from "@iconify/react";
@@ -65,7 +64,7 @@ export default function HasilMatching() {
     data.status.toLowerCase() === "dibatalkan";
 
   return (
-    <div className="w-full min-h-screen bg-[#F5F5F5] flex flex-col font-sans pb-28 relative">
+    <div className="w-full min-h-screen bg-[#F5F5F5] flex flex-col font-sans relative">
       {/* 1. Header Section - Samakan dengan halaman lain agar CV & Alamat muncul */}
       <div className="bg-[#7a8c2e] px-5 pt-10 pb-6 text-white relative flex-shrink-0">
         <div className="flex gap-3 items-center mb-3">
@@ -250,8 +249,6 @@ export default function HasilMatching() {
           </div>
         </div>
       </div>
-
-      <BottomNav role="pedagang" />
     </div>
   );
 }

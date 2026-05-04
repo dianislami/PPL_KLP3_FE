@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { panenAPI } from "../../services/api";
-import BottomNav from "../../components/layout/BottomNav";
 import { Icon } from "@iconify/react"; // Tambahkan icon untuk lokasi
 
 interface PanenDetail {
@@ -72,7 +71,6 @@ export default function DetailProduk() {
         <div className="flex-1 flex items-center justify-center">
           <p className="text-gray-500">Data panen tidak ditemukan</p>
         </div>
-        <BottomNav role="pedagang" />
       </div>
     );
   }
@@ -84,7 +82,7 @@ export default function DetailProduk() {
       panen.kualitas?.toLowerCase().includes("rusak"));
 
   return (
-    <div className="w-full min-h-screen bg-white flex flex-col pb-28">
+    <div className="w-full min-h-screen bg-white flex flex-col">
       {/* Top Nav Bar */}
       <div className="flex items-center justify-between px-4 pt-12 pb-4">
         <button
@@ -229,18 +227,7 @@ export default function DetailProduk() {
             Chat Petani
           </button>
         </div>
-
-        <div className="grid grid-cols-1 gap-3 mb-6">
-          <button
-            onClick={() => navigate("/daftar-panen")}
-            className="bg-gray-100 text-gray-800 rounded-2xl py-4 font-bold active:scale-95 transition-all"
-          >
-            Kembali
-          </button>
-        </div>
       </div>
-
-      <BottomNav role="pedagang" />
     </div>
   );
 }

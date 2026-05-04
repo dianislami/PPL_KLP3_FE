@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { chatAPI } from '../../services/api';
-import BottomNav from '../../components/layout/BottomNav';
 import { Icon } from '@iconify/react';
 
 interface ChatItem {
@@ -163,8 +162,6 @@ export default function DaftarChatPetani() {
           </div>
         )}
       </div>
-
-      <BottomNav role="pedagang" />
     </div>
   );
 }
