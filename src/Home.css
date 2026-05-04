@@ -173,3 +173,12 @@
   justify-content: space-between;
   align-items: center;
 }
+
+/* CONTROL VISIBILITY */
+.desktop-only {
+  display: none;
+}
+
+.mobile-only {
+  display: flex;
+}

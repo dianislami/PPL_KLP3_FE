@@ -1,0 +1,97 @@
+@media (min-width: 1024px) {
+
+  /* CONTAINER */
+  .phone {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* HERO FULL SCREEN */
+  .hero {
+    height: 100vh;
+    border-radius: 0;
+    position: relative;
+  }
+
+  /* IMAGE */
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1);
+  }
+
+  /* OVERLAY (biar teks jelas) */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.75)
+    );
+  }
+
+  /* HERO CONTENT LAYOUT */
+  .hero-content {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    text-align: center;
+    padding: 50px 20px;
+    color: white;
+  }
+
+  /* BRAND (ATAS TENGAH) */
+  .brand {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  /* TITLE (TENGAH) */
+  .title {
+    position: static;
+    font-size: 64px;
+    max-width: 700px;
+    line-height: 1.1;
+  }
+
+  /* SEMBUNYIKAN SECTION BAWAH (CARDS) */
+  .bottom {
+    display: none;
+  }
+
+  /* CTA DI DALAM HERO */
+  .cta {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 320px;
+    padding: 20px;
+
+    font-size: 18px;
+    font-weight: 500;
+
+    border-radius: 50px;
+    border: none;
+
+    background: black;
+    color: white;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+}

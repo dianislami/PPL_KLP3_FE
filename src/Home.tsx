@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import "./Home-desktop.css";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -22,9 +23,17 @@ export default function Home() {
             Better Health <br /> Higher Yield
           </h1>
         </div>
+
+        {/* BUTTON KHUSUS DESKTOP */}
+        <button
+          className="cta desktop-only"
+          onClick={() => navigate("/login")}
+        >
+          Start Farming <span>›››</span>
+        </button>
       </div>
 
-      {/* BOTTOM */}
+      {/* BOTTOM (MOBILE) */}
       <div className="bottom">
 
         <div className="cards">
@@ -48,9 +57,9 @@ export default function Home() {
 
         </div>
 
-        {/* BUTTON NAVIGATE */}
+        {/* BUTTON MOBILE */}
         <button
-          className="cta"
+          className="cta mobile-only"
           onClick={() => navigate("/login")}
         >
           Start Farming <span>›››</span>

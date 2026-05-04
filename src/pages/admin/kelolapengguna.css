@@ -1,21 +1,18 @@
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* PAGE */
 .page {
   width: 100%;
-  max-width: none;
-  margin: 0;
   min-height: 100vh;
   background: #f4f4f4;
   font-family: "Poppins", sans-serif;
-  position: relative;
-  overflow-x: hidden;
   padding: 24px;
 }
-
 
 /* HEADER */
 .header {
@@ -33,12 +30,6 @@
   color: #555;
 }
 
-.profile {
-  background: #ddd;
-  padding: 10px;
-  border-radius: 50%;
-}
-
 /* TITLE */
 .title {
   margin: 15px 0;
@@ -48,9 +39,8 @@
 /* CARD */
 .page .card {
   width: 100%;
-  max-width: 100%;
   background: #cfd8a5;
-  padding: 16px;
+  padding: 20px;
   border-radius: 25px;
 }
 
@@ -58,14 +48,15 @@
 .page .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 10px 0;
+  gap: 15px;
+  margin: 15px 0;
 }
 
 .stat {
   flex: 1;
+  min-width: 150px;
   background: #dfe8b9;
-  padding: 10px;
+  padding: 15px;
   border-radius: 15px;
   text-align: center;
 }
@@ -77,63 +68,124 @@
 /* SEARCH */
 .search {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 20px;
   border: none;
-  margin: 10px 0;
+  margin: 15px 0;
+  outline: none;
 }
 
 /* TABLE */
 .table {
+  width: 100%;
   background: #dfe8b9;
   border-radius: 15px;
   overflow: hidden;
+  padding: 10px;
 }
 
-/* HEADER TABLE */
-.thead {
+/* HEADER & ROW */
+.thead,
+.row {
   display: grid;
-  grid-template-columns: 4fr 2fr 2fr 2fr;
-  column-gap: 20px;
-  padding: 10px;
-  font-weight: bold;
+  grid-template-columns: 3fr 2fr 2fr 2fr;
+  padding: 12px 16px;
+  align-items: center;
+}
+
+/* HEADER */
+.thead {
+  font-size: 14px;
+  font-weight: 600;
   border-bottom: 1px solid #999;
 }
 
 /* ROW */
 .row {
-  display: grid;
-  grid-template-columns: 4fr 2fr 2fr 2fr;
-  column-gap: 20px;
-  padding: 10px;
+  font-size: 14px;
   border-bottom: 1px solid #ccc;
-  font-size: 13px;
+}
+
+/* HOVER */
+.row:hover {
+  background: #d6e0a8;
+}
+
+/* 🔥 FIX UTAMA: TARGET SPAN (bukan div) */
+.thead span,
+.row span {
+  display: flex;
+  align-items: center;
+}
+
+/* ALIGN PER KOLOM */
+.thead span:nth-child(1),
+.row span:nth-child(1) {
+  justify-content: flex-start;
+}
+
+.thead span:nth-child(2),
+.row span:nth-child(2) {
+  justify-content: center;
+  gap: 6px;
+}
+
+.thead span:nth-child(3),
+.row span:nth-child(3) {
+  justify-content: center;
+}
+
+.thead span:nth-child(4),
+.row span:nth-child(4) {
+  justify-content: center;
 }
 
 /* STATUS */
 .active {
   color: green;
-  font-weight: bold;
+  font-weight: 600;
+}
+
+.pending {
+  color: orange;
+  font-weight: 600;
 }
 
 /* ACTION */
 .actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* ITEM AKSI */
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 12px;
+  cursor: pointer;
+}
+
+/* KHUSUS HAPUS */
+.delete {
+  color: red;
+}
+
+.delete:hover {
+  opacity: 0.7;
 }
 
 /* FOOTER */
 .footer {
   text-align: center;
-  font-size: 10px;
+  font-size: 11px;
   margin-top: 10px;
+  color: #555;
 }
 
 /* BOTTOM NAV */
 .bottom-nav {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  transform: none;
   width: 100%;
   margin-top: 24px;
   background: black;
@@ -153,7 +205,7 @@
   color: white;
   padding: 10px;
   border-radius: 20px;
-  text-align: center;
+  cursor: pointer;
 }
 
 .nav-btn.active {
