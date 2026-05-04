@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { chatAPI, authAPI } from '../../services/api';
-import { getImageUrl } from "../../services/api";
+// import { getImageUrl } from "../../services/api";
 
 interface Message {
   _id?: string;
@@ -17,27 +17,36 @@ interface Message {
 function parseProduk(pesan: string) {
   try {
     const lines = pesan.split('\n').map(l => l.trim()).filter(Boolean);
-    const get   = (prefix: string) => lines.find(l => l.startsWith(prefix))?.replace(prefix, '').trim() ?? '';
+    const get = (prefix: string) => lines.find(l => l.startsWith(prefix))?.replace(prefix, '').trim() ?? '';
 
-    // Extract foto from first line
     let foto = '';
     const fotoLine = pesan.split('\n')[0];
     if (fotoLine.startsWith('[FOTO_URL:')) {
-      const rawFoto = fotoLine.slice(10, -1);
-      foto = getImageUrl(rawFoto);
+      let rawFoto = fotoLine.slice(10, -1);
+      
+      // Bersihkan double URL dulu
+      const doubleMatch = rawFoto.match(/https?:\/\/.+(https?:\/\/.+)/);
+      if (doubleMatch) rawFoto = doubleMatch[1];
+      
+      // Kalau localhost → pakai apa adanya (browser local bisa akses)
+      // Kalau path relatif → prepend origin yang benar
+      if (!rawFoto.startsWith('http')) {
+        rawFoto = `${window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://smart-harvest-production.up.railway.app'}${rawFoto}`;
+      }
+      
+      foto = rawFoto;
     }
 
-    const nama     = get('🌾');
+    const nama = get('🌾');
     const hargaRaw = get('💰').replace('Rp', '').replace('/Kg', '').replace(/[^\d]/g, '');
-    const harga    = parseInt(hargaRaw) || 0;
+    const harga = parseInt(hargaRaw) || 0;
     const kualitas = get('📊');
     const jumlahRaw = get('⚖️').replace('Kg tersedia', '').replace(/[^\d]/g, '');
-    const jumlah   = parseInt(jumlahRaw) || 0;
+    const jumlah = parseInt(jumlahRaw) || 0;
 
-    const skipPfx  = ['[FOTO_URL:', '🌾','💰','📊','⚖️','Tertarik'];
+    const skipPfx = ['[FOTO_URL:', '🌾', '💰', '📊', '⚖️', 'Tertarik'];
     const deskripsi = lines.filter(l => !skipPfx.some(p => l.startsWith(p))).join(' ').trim();
 
-    // Return object if both nama and foto exist
     return nama && foto ? { nama, harga, kualitas, jumlah, deskripsi, foto } : null;
   } catch {
     return null;
