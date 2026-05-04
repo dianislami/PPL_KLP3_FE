@@ -1,4 +1,7 @@
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import { permintaanAPI, panenAPI } from '../../services/api';
 
 type StepStatus = 'done' | 'active' | 'pending';
 
@@ -15,32 +18,13 @@ const ICONS = {
   chat: 'mdi:chat'
 };
 
-const steps: Step[] = [
-  {
-    id: 1,
-    status: 'done',
-    title: 'Diambil',
-    desc: 'Dari Atong, Kec. Montasik, Kabupaten Aceh Besar, Aceh, 11:30 WIB',
-  },
-  {
-    id: 2,
-    status: 'active',
-    title: 'Dalam Perjalanan',
-    desc: 'custom', // handled separately
-  },
-  {
-    id: 3,
-    status: 'pending',
-    title: 'Tiba di Gudang',
-    desc: 'Pusat Logistik, Banda Aceh, Est. 14:00 WIB',
-  },
-  {
-    id: 4,
-    status: 'pending',
-    title: 'Diterima',
-    desc: 'Pedagang: CV.Hasil Bumi Sejahtera\nAlamat: Jl. Teuku Umar No. 10, Banda Aceh',
-  },
-];
+interface PanenData {
+  _id: string;
+  nama_komoditas: string;
+  jumlah: number;
+  foto?: Array<{ path: string }>;
+  [key: string]: any;
+}
 
 function StepIcon({ status }: { status: StepStatus }) {
   if (status === 'done') {
@@ -73,46 +57,142 @@ function StepIcon({ status }: { status: StepStatus }) {
 }
 
 export default function StatusPengiriman() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [permintaan, setPermintaan] = useState<any>(null);
+  const [panenList, setPanenList] = useState<PanenData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Ambil data permintaan
+        if (id) {
+          const resPermintaan = await permintaanAPI.getById(id);
+          setPermintaan(resPermintaan.data);
+        }
+        // Ambil semua data panen untuk lookup foto
+        const resPanen = await panenAPI.getAll();
+        setPanenList(resPanen.data);
+      } catch (error) {
+        console.error('Gagal memuat data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetchData();
+  }, [id]);
+
+  if (loading || !permintaan) {
+    return (
+      <div className="w-full min-h-screen bg-[#7a8c2e] flex items-center justify-center">
+        <p className="text-white">Memuat data...</p>
+      </div>
+    );
+  }
+
+  const getProdukFoto = () => {
+    if (permintaan.matches && permintaan.matches.length > 0) {
+      const firstMatch = permintaan.matches[0];
+      const panenItem = panenList.find(p => p._id === firstMatch.hasil_panen_id);
+      if (panenItem?.foto && panenItem.foto.length > 0) {
+        return `http://localhost:5000${panenItem.foto[0].path}`;
+      }
+    }
+    return null;
+  };
+
+  const getPetaniInfo = () => {
+    if (permintaan.matches && permintaan.matches.length > 0) {
+      const firstMatch = permintaan.matches[0];
+      const panenItem = panenList.find(p => p._id === firstMatch.hasil_panen_id);
+      return {
+        nama: firstMatch.petani_nama || panenItem?.user_id?.nama || 'Petani',
+        alamat: firstMatch.lokasi || panenItem?.user_id?.alamat || 'Lokasi Petani',
+      };
+    }
+    return { nama: 'Petani', alamat: 'Lokasi Petani' };
+  };
+
+  const petaniInfo = getPetaniInfo();
+
+  const steps: Step[] = [
+    {
+      id: 1,
+      status: 'done',
+      title: 'Diambil',
+      desc: `Dari ${petaniInfo.alamat}, ${new Date(permintaan.tanggal).toLocaleTimeString('id-ID')} WIB`,
+    },
+    {
+      id: 2,
+      status: 'active',
+      title: 'Dalam Perjalanan',
+      desc: 'custom',
+    },
+    {
+      id: 3,
+      status: 'pending',
+      title: 'Tiba di Gudang',
+      desc: `Menuju: ${permintaan.user_id?.alamat || 'Banda Aceh'}, Est. 14:00 WIB`,
+    },
+    {
+      id: 4,
+      status: 'pending',
+      title: 'Diterima',
+      desc: `Pedagang: ${permintaan.user_id?.nama || 'Pembeli'}\nAlamat: ${permintaan.user_id?.alamat || 'Banda Aceh'}`,
+    },
+  ];
 
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
 
       {/* Header */}
-      <div className="px-5 pt-6 pb-5 text-white flex-shrink-0">
-        <div className="flex justify-between items-start mb-3">
+      <div className="px-5 pt-6 text-white flex-shrink-0">
+        <div className="flex gap-3 items-center mb-3">
+          <button
+            onClick={() => navigate("/riwayat-panen?tab=penjualan")}
+            className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center active:scale-95 transition-all"
+          >
+            <span className="text-gray-700 font-bold text-lg leading-none">‹</span>
+          </button>
           <div>
-            <h1 className="text-3xl font-bold">Hallo, Farmers</h1>
-            <p className="text-sm opacity-80">Kamis, 30 April 2026</p>
+            <h1 className="text-2xl font-bold">Status Pengiriman</h1>
+            <p className="text-lg opacity-80">#{permintaan.nomor_permintaan}</p>
           </div>
-          <div className="w-11 h-11 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-xl">
-            👨‍🌾
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Bar */}
-      <div className="mx-4 bg-white rounded-2xl shadow-md p-3 grid grid-cols-3 gap-2 z-10 relative -mb-3">
-        <div className="text-center">
-          <p className="text-[10px] text-gray-400">Hasil Kumulatif</p>
-          <p className="text-xs font-bold text-gray-800">35.4 Ton</p>
-        </div>
-        <div className="text-center border-x border-gray-100">
-          <p className="text-[10px] text-gray-400">Lahan Aktif</p>
-          <p className="text-xs font-bold text-gray-800">12 Hektar</p>
-        </div>
-        <div className="text-center">
-          <p className="text-[10px] text-gray-400">Prediksi Pasar</p>
-          <p className="text-xs font-bold text-[#7a8c2e]">Stabil ↗</p>
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-6 overflow-y-auto pb-32 px-5">
+      <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-8 overflow-y-auto pb-30 px-5">
 
-        {/* Title */}
-        <p className="text-base font-bold text-gray-900 mb-6">
-          Status Pengiriman <span className="text-[#5a7a1a]">#TKR-AGR-0411</span>
-        </p>
+        {/* Produk Card */}
+        {permintaan.matches && permintaan.matches.length > 0 && (
+          <div className="bg-white border border-gray-100 rounded-[30px] p-4 mb-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-gray-100 overflow-hidden flex-shrink-0 shadow-inner">
+                {getProdukFoto() ? (
+                  <img src={getProdukFoto()!} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-[#eaf0d8] flex items-center justify-center text-2xl">
+                    🌾
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-gray-800 text-sm uppercase truncate">
+                  {permintaan.nama_komoditas}
+                </p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase mt-0.5">
+                  {permintaan.matches[0]?.jumlah_diambil || permintaan.jumlah} Kg
+                </p>
+                <p className="text-[10px] text-gray-500 font-semibold mt-1">
+                  Petani: {permintaan.matches[0]?.petani_nama || 'Petani'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Timeline */}
         <div className="relative flex flex-col gap-0">
@@ -180,17 +260,6 @@ export default function StatusPengiriman() {
             );
           })}
         </div>
-      </div>
-
-      {/* Bottom Action Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white px-5 pb-6 pt-3 flex gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-        <button
-          onClick={() => { window.location.href = '/chat/:nama?' }}
-          className="flex-1 bg-[#6a8a1e] text-white font-semibold text-sm py-4 rounded-full flex items-center justify-center gap-2"
-        >
-          <Icon icon={ICONS.chat} className="text-2xl" />
-          Hubungi Penjual
-        </button>
       </div>
     </div>
   );

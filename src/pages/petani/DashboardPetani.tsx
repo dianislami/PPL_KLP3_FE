@@ -232,7 +232,7 @@ export default function DashboardPetani() {
             <p className="font-bold text-gray-800 text-xs">Kelola Recovery</p>
           </button>
           <button
-            onClick={() => navigate("/status-pengiriman")}
+            onClick={() => navigate("/riwayat-panen?tab=penjualan")}
             className="bg-[#e8efd6] border-2 border-[#7a8c2e] rounded-2xl p-4 text-center active:scale-95 flex flex-col items-center transition-all"
           >
             <Icon

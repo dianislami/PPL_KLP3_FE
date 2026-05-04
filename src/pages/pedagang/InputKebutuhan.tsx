@@ -99,13 +99,10 @@ export default function InputKebutuhan() {
       <div className="px-5 pt-10 pb-8 text-white flex-shrink-0">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-white">Hallo, Seller</h1>
+            <h1 className="text-3xl font-bold text-white">Input Kebutuhan</h1>
             <p className="text-sm opacity-80 mt-1">
               Lengkapi formulir permintaan Anda
             </p>
-          </div>
-          <div className="w-12 h-12 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-2xl">
-            🏪
           </div>
         </div>
         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm p-3 rounded-2xl border border-white/10">

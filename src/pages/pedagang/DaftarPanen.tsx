@@ -21,7 +21,6 @@ export default function DaftarPanen() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [dataPanen, setDataPanen] = useState<PanenItem[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // STATE UNTUK DROPDOWN
   const [showDropdown, setShowDropdown] = useState(false);
@@ -40,7 +39,6 @@ export default function DaftarPanen() {
 
   const fetchPanen = async () => {
     try {
-      setLoading(true);
       const response = await panenAPI.getAll();
       // FILTER: Hanya tampilkan barang yang stoknya masih ada (> 0)
       const stokTersedia = (response.data || []).filter(
@@ -50,7 +48,6 @@ export default function DaftarPanen() {
     } catch (error) {
       console.error("Error fetching panen:", error);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -86,13 +83,10 @@ export default function DaftarPanen() {
       <div className="px-5 pt-10 pb-8 text-white flex-shrink-0">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-3xl font-bold">Hallo, Seller</h1>
+            <h1 className="text-3xl font-bold">Produk Panen</h1>
             <p className="text-sm opacity-80 mt-1">
               Temukan produk terbaik dari petani lokal
             </p>
-          </div>
-          <div className="w-12 h-12 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-2xl">
-            🛒
           </div>
         </div>
 

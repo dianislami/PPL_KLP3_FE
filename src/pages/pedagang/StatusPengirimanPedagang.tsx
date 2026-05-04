@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import BottomNav from "../../components/layout/BottomNav";
 import { useAuth } from "../../context/AuthContext";
 import { permintaanAPI } from "../../services/api";

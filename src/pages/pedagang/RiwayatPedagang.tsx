@@ -62,15 +62,12 @@ export default function RiwayatPedagang() {
       <div className="px-5 pt-10 pb-8 text-white flex-shrink-0">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-white uppercase tracking-tight">
-              Hallo, {user?.nama?.split(" ")[0] || "Seller"}
+            <h1 className="text-3xl font-bold text-white tracking-tight">
+              Riwayat
             </h1>
             <p className="text-sm opacity-80 mt-1">
               Riwayat permintaan komoditas Anda
             </p>
-          </div>
-          <div className="w-12 h-12 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-2xl shadow-md">
-            🏪
           </div>
         </div>
 

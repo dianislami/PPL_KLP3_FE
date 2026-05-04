@@ -35,7 +35,7 @@ export default function App() {
       <Route path="/detail-panen/:id" element={<DetailPanen />} />
       <Route path="/profil-petani" element={<ProfilPetani />} />
       <Route path="/ubah-kata-sandi" element={<UbahKataSandi />} />
-      <Route path="/status-pengiriman" element={<StatusPengiriman />} />
+      <Route path="/status-pengiriman/:id" element={<StatusPengiriman />} />
       <Route path="/dashboard-pedagang" element={<DashboardPedagang />} />
       <Route path="/profil-pedagang" element={<ProfilPedagang />} />
       <Route path="/input-kebutuhan" element={<InputKebutuhan />} />

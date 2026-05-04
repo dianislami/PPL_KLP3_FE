@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import BottomNav from "../../components/layout/BottomNav";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { panenAPI, permintaanAPI } from "../../services/api";
+import { Icon } from "@iconify/react";
 
 type Tab = "panen" | "penjualan";
 
@@ -20,11 +22,14 @@ interface PanenData {
 export default function RiwayatPanen() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>("panen");
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const initialTab = params.get("tab") === "penjualan" ? "penjualan" : "panen";
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab as Tab);
   const [panenList, setPanenList] = useState<PanenData[]>([]);
   const [penjualanList, setPenjualanList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,15 +60,6 @@ export default function RiwayatPanen() {
     if (user?.id) fetchData();
   }, [user?.id]);
 
-  const getEmoji = (nama: string) => {
-    const n = (nama || "").toLowerCase();
-    if (n.includes("wortel")) return "🥕";
-    if (n.includes("tomat")) return "🍅";
-    if (n.includes("jagung")) return "🌽";
-    if (n.includes("kentang")) return "🥔";
-    if (n.includes("cabai")) return "🌶️";
-    return "🌱";
-  };
 
   const getBgColor = (nama: string) => {
     const n = (nama || "").toLowerCase();
@@ -86,10 +82,10 @@ export default function RiwayatPanen() {
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
       {/* Header */}
-      <div className="px-5 pt-10 pb-5 text-white flex-shrink-0">
+      <div className="px-5 pt-6 pb-5 text-white flex-shrink-0">
         <div className="flex justify-between items-start mb-3">
           <div>
-            <h1 className="text-3xl font-bold uppercase tracking-tight">
+            <h1 className="text-3xl font-bold tracking-tight">
               Riwayat Panen
             </h1>
             <p className="text-sm opacity-80 mt-1">
@@ -100,9 +96,6 @@ export default function RiwayatPanen() {
                 year: "numeric",
               })}
             </p>
-          </div>
-          <div className="w-12 h-12 rounded-full bg-[#9aaa3f] border-2 border-white/30 flex items-center justify-center text-xl shadow-md">
-            👨‍🌾
           </div>
         </div>
       </div>
@@ -147,7 +140,10 @@ export default function RiwayatPanen() {
                 : "text-[#7a8c2e]"
             }`}
           >
-            🌾 Stok Panen
+            <div className="flex items-center justify-center gap-1.5">
+              <Icon icon="mdi:leaf" className="text-base" />
+              <span>Stok Panen</span>
+            </div>
           </button>
           <button
             onClick={() => setActiveTab("penjualan")}
@@ -157,7 +153,10 @@ export default function RiwayatPanen() {
                 : "text-[#7a8c2e]"
             }`}
           >
-            🧾 Penjualan
+            <div className="flex items-center justify-center gap-1.5">
+              <Icon icon="mdi:marketplace" className="text-base" />
+              <span>Penjualan</span>
+            </div>
           </button>
         </div>
 
@@ -180,7 +179,7 @@ export default function RiwayatPanen() {
             ) : panenList.length === 0 ? (
               <div className="text-center py-20 opacity-20">
                 <span className="text-5xl">🌱</span>
-                <p className="mt-2 font-bold">Belum ada stok</p>
+                <p className="mt-2 font-bold">Belum ada hasil panen</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4">
@@ -190,18 +189,14 @@ export default function RiwayatPanen() {
                     onClick={() => navigate(`/detail-panen/${item._id}`)}
                     className="relative rounded-[30px] overflow-hidden h-48 bg-gray-100 shadow-sm border border-gray-50 active:scale-95 transition-all cursor-pointer"
                   >
-                    {item.foto && item.foto.length > 0 ? (
-                      <img
-                        src={`http://localhost:5000${item.foto[0].path}`}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div
-                        className={`w-full h-full ${getBgColor(item.nama_komoditas)} flex items-center justify-center text-5xl`}
-                      >
-                        {getEmoji(item.nama_komoditas)}
-                      </div>
-                    )}
+                    <img
+                      src={
+                        item.foto && item.foto.length > 0
+                          ? `http://localhost:5000${item.foto[0].path}`
+                          : "/images/default-panen.jpg" // <-- fallback image
+                      }
+                      className="w-full h-full object-cover"
+                    />
                     <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-3 text-center">
                       <p className="font-black text-white text-xs uppercase tracking-tighter">
                         {item.nama_komoditas}
@@ -235,7 +230,6 @@ export default function RiwayatPanen() {
               </p>
             ) : penjualanList.length === 0 ? (
               <div className="text-center py-20 opacity-20">
-                <span className="text-5xl">🧾</span>
                 <p className="mt-2 font-bold">Belum ada penjualan</p>
               </div>
             ) : (
@@ -247,11 +241,31 @@ export default function RiwayatPanen() {
                   return (
                     <div
                       key={order._id}
-                      className="bg-[#f9faf5] border border-gray-100 rounded-[30px] p-5 shadow-sm"
+                      onClick={() => navigate(`/status-pengiriman/${order._id}`)}
+                      className="bg-[#f9faf5] border border-gray-100 rounded-[30px] p-5 shadow-sm cursor-pointer active:scale-95 transition-all"
                     >
                       <div className="flex items-center gap-4 mb-4">
-                        <div className="w-14 h-14 rounded-2xl bg-[#eaf0d8] flex items-center justify-center text-3xl shadow-inner">
-                          {getEmoji(order.nama_komoditas)}
+                        <div className="w-14 h-14 rounded-2xl bg-[#eaf0d8] overflow-hidden shadow-inner">
+                          {(() => {
+                            const panenItem = panenList.find(
+                              (p) => p._id === myMatch?.hasil_panen_id,
+                            );
+                            if (panenItem?.foto && panenItem.foto.length > 0) {
+                              return (
+                                <img
+                                  src={`http://localhost:5000${panenItem.foto[0].path}`}
+                                  className="w-full h-full object-cover"
+                                />
+                              );
+                            }
+                            return (
+                              <div
+                                className={`w-full h-full ${getBgColor(order.nama_komoditas)} flex items-center justify-center text-3xl`}
+                              >
+                                🌱
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-start">

@@ -99,10 +99,8 @@ const fetchPanen = async () => {
         <div className="px-6 py-6 text-white">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-4xl font-bold leading-tight">
-                Hallo,
-                <br />
-                Seller
+              <h1 className="text-3xl font-bold leading-tight">
+                Hallo, Seller
               </h1>
               <p className="text-sm opacity-80 mt-1">
                 {new Date().toLocaleDateString("id-ID", {

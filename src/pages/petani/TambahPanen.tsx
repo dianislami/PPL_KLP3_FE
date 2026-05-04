@@ -111,11 +111,23 @@ export default function TambahPanen() {
 
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col">
+      <style>{`
+        /* Hide native date input icon (Chrome/Safari) */
+        .hide-date::-webkit-calendar-picker-indicator {
+          display: none;
+          -webkit-appearance: none;
+        }
+        /* Hide spinner on number inputs if any */
+        .hide-date::-webkit-inner-spin-button, .hide-date::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      `}</style>
       {/* Header */}
       <div className="px-6 py-6 text-white">
         <div className="flex justify-between items-start mb-1">
           <div>
-            <h1 className="text-2xl font-bold">Tambah Data</h1>
+            <h1 className="text-3xl font-bold">Tambah Data</h1>
             <p className="text-sm opacity-80">
               {new Date().toLocaleDateString("id-ID", {
                 weekday: "long",
@@ -257,7 +269,7 @@ export default function TambahPanen() {
             <input
               ref={dateRef}
               type="date"
-              className="flex-1 text-xs bg-transparent outline-none text-gray-400"
+              className="flex-1 text-xs bg-transparent outline-none text-gray-400 hide-date"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
             />
