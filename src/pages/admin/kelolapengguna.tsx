@@ -1,22 +1,46 @@
+
+
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { authAPI } from "../../services/api";
+import { FaEye, FaTrash, FaEdit } from "react-icons/fa";
 import "./kelolapengguna.css";
 
-export default function kelolapengguna() {
-  const users = Array(6).fill({
-    nama: "Lorem Ipsum",
-    peran: "Petani",
-    status: "Aktif",
-  });
+export default function KelolaPengguna() {
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await authAPI.getUsers();
+        setUsers(res.data);
+      } catch (err: any) {
+        setError("Gagal mengambil data pengguna");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  // Statistik (admin tidak dihitung)
+  const nonAdminUsers = users.filter(u => u.role !== 'admin');
+  const totalPengguna = nonAdminUsers.length;
+  const penggunaAktif = nonAdminUsers.filter(u => (u.status ? u.status === 'Aktif' : true)).length;
+  const validasiTertunda = nonAdminUsers.filter(u => u.status === 'Tertunda').length;
 
   return (
     <div className="page">
+      {loading && <div>Loading...</div>}
+      {error && <div style={{color:'red'}}>{error}</div>}
       {/* HEADER */}
       <div className="header">
         <div>
           <h2>Hallo, Admin</h2>
-          <p className="date">Minggu, 11 April 2026</p>
+          <p className="date">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</p>
         </div>
-        <div className="profile">👤</div>
       </div>
 
       {/* TITLE */}
@@ -30,15 +54,15 @@ export default function kelolapengguna() {
         <div className="stats">
           <div className="stat">
             <p>Total Pengguna</p>
-            <h2>20</h2>
+            <h2>{totalPengguna}</h2>
           </div>
           <div className="stat">
             <p>Pengguna Aktif</p>
-            <h2>8</h2>
+            <h2>{penggunaAktif}</h2>
           </div>
           <div className="stat">
             <p>Validasi Tertunda</p>
-            <h2>5</h2>
+            <h2>{validasiTertunda}</h2>
           </div>
         </div>
 
@@ -58,20 +82,40 @@ export default function kelolapengguna() {
             <span>Aksi</span>
           </div>
 
-          {users.map((u, i) => (
-            <div className="row" key={i}>
-              <span>{u.nama}</span>
-              <span>👨‍🌾 {u.peran}</span>
-              <span className="active">{u.status}</span>
-              <span className="actions">
-                👁 Hapus Edit
-              </span>
-            </div>
-          ))}
+          {nonAdminUsers.map((u, i) => (
+              <div
+                className="row"
+                key={i}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '2fr 1fr 1fr 1.5fr',
+                  alignItems: 'center',
+                  padding: '8px 0',
+                }}
+              >
+                <span style={{ textAlign: 'left', wordBreak: 'break-word' }}>{u.nama}</span>
+                <span style={{ textAlign: 'center' }}>👤 {u.role}</span>
+                <span className={u.status === 'Tertunda' ? 'pending' : 'active'} style={{ textAlign: 'center' }}>{u.status || 'Aktif'}</span>
+                <span className="actions" style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 12 }}>
+                  <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 13 }}>
+                    <FaEye style={{ fontSize: 18 }} />
+                    <span>Lihat</span>
+                  </span>
+                  <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 13 }}>
+                    <FaTrash style={{ fontSize: 18 }} />
+                    <span>Hapus</span>
+                  </span>
+                  <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: 13 }}>
+                    <FaEdit style={{ fontSize: 18 }} />
+                    <span>Edit</span>
+                  </span>
+                </span>
+              </div>
+            ))}
         </div>
 
         <p className="footer">
-          Terakhir sinkronisasi: 11 Apr 2026, 12:00 WIB
+          Terakhir sinkronisasi: {new Date().toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB
         </p>
       </div>
 

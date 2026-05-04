@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Monitoring.css";
 import { Link } from "react-router-dom";
 import {
@@ -9,6 +9,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
+import { panenAPI } from "../../services/api";
 
 interface StatCardProps {
   title: string;
@@ -27,24 +28,58 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle }) => {
   );
 };
 
-// ✅ DATA DUMMY
-const data = [
-  { name: "Jan", panen: 40, distribusi: 30 },
-  { name: "Feb", panen: 60, distribusi: 50 },
-  { name: "Mar", panen: 80, distribusi: 70 },
-  { name: "Apr", panen: 100, distribusi: 90 },
-];
+
+const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
 const MonitoringPage: React.FC = () => {
+  const [panen, setPanen] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchPanen = async () => {
+      try {
+        const res = await panenAPI.getAll();
+        setPanen(res.data);
+      } catch (err) {
+        setError("Gagal mengambil data panen");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPanen();
+  }, []);
+
+  // Hitung statistik
+  const totalPanen = panen.reduce((sum, p) => sum + (p.jumlah || 0), 0);
+  // Dummy: total transaksi = jumlah data panen
+  const totalTransaksi = panen.length;
+  // Dummy: recovery = jumlah panen dengan kualitas mengandung 'grade c' atau 'rusak'
+  const totalRecovery = panen.filter(p => /grade c|rusak/i.test(p.kualitas || "")).reduce((sum, p) => sum + (p.jumlah || 0), 0);
+
+  // Data chart bulanan
+  const chartData = months.map((m, idx) => {
+    const monthPanen = panen.filter(p => {
+      const tgl = new Date(p.tanggal);
+      return tgl.getMonth() === idx;
+    });
+    return {
+      name: m,
+      panen: monthPanen.reduce((sum, p) => sum + (p.jumlah || 0), 0),
+      distribusi: monthPanen.length, // dummy: jumlah distribusi = jumlah panen
+    };
+  });
+
   return (
     <div className="page">
+      {loading && <div>Loading...</div>}
+      {error && <div style={{color:'red'}}>{error}</div>}
       {/* HEADER */}
       <div className="header">
         <div>
           <h2>Hallo, Admin</h2>
-          <div className="date">Minggu, 11 April 2026</div>
+          <div className="date">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</div>
         </div>
-        <div className="profile">👤</div>
       </div>
 
       {/* TITLE */}
@@ -56,43 +91,46 @@ const MonitoringPage: React.FC = () => {
 
         {/* STATS */}
         <div className="stats">
-          <StatCard title="Total Panen" value="20.4" subtitle="Ton" />
-          <StatCard title="Transaksi" value="220" />
-          <StatCard title="Recovery" value="1.5" subtitle="Ton" />
+          <StatCard title="Total Panen" value={totalPanen.toFixed(1)} subtitle="Ton" />
+          <StatCard title="Transaksi" value={totalTransaksi.toString()} />
+          <StatCard title="Recovery" value={totalRecovery.toFixed(1)} subtitle="Ton" />
         </div>
 
-        {/* ✅ CHART */}
+        {/* CHART */}
         <div className="chart-box">
-          <h4>Tren Panen & Distribusi</h4>
-
           <LineChart
             width={720}
             height={300}
-            data={data}
+            data={chartData}
             margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
           >
             <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
             <XAxis dataKey="name" />
             <YAxis />
-            <Tooltip />
+            <Tooltip
+              contentStyle={{ background: '#fff', border: '1px solid #ccc', borderRadius: 8 }}
+              formatter={(value: any, name: any) => [`${value}`, name === 'panen' ? 'Panen (Ton)' : 'Distribusi']}
+            />
             <Line
               type="monotone"
               dataKey="panen"
               stroke="#556B2F"
               strokeWidth={2}
+              activeDot={{ r: 8 }}
             />
             <Line
               type="monotone"
               dataKey="distribusi"
               stroke="#8B0000"
               strokeWidth={2}
+              activeDot={{ r: 8 }}
             />
           </LineChart>
         </div>
 
         {/* FOOTER */}
         <div className="footer">
-          Terakhir sinkronisasi: 11 Apr 2026, 12:00 WIB
+          Terakhir sinkronisasi: {new Date().toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB
         </div>
       </div>
 

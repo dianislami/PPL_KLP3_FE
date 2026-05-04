@@ -58,7 +58,7 @@ export default function Login() {
 
       if (userType === 'petani') navigate('/dashboard-petani');
       else if (userType === 'pedagang') navigate('/dashboard-pedagang');
-      else if (userType === 'admin') navigate('/dashboard-admin');
+        else if (userType === 'admin') navigate('/monitoring');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login gagal');
     } finally {
