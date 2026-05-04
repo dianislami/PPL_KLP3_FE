@@ -1,20 +1,28 @@
 import axios from 'axios';
 
-// Logic untuk auto-detect URL backend
-const getApiUrl = () => {
-  // 1. Cek environment variable (dari Vercel atau .env.local)
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
+const LOCAL_API_URL = 'http://localhost:5000/api';
+const PRODUCTION_API_URL = 'https://smart-harvest-production.up.railway.app/api';
+
+// Logic untuk auto-detect URL backend.
+// Env tetap bisa override, tapi production tidak akan jatuh ke localhost.
+export const getApiUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+
+  if (envUrl) {
+    return envUrl;
   }
-  
-  // 2. Jika di localhost/development, pakai localhost
-  if (import.meta.env.DEV) {
-    return 'http://localhost:5000/api';
+
+  if (
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+  ) {
+    return LOCAL_API_URL;
   }
-  
-  // 3. Fallback ke Railway production
-  return 'https://smart-harvest-production.up.railway.app/api';
+
+  return PRODUCTION_API_URL;
 };
+
+export const getBackendOrigin = () => getApiUrl().replace(/\/api\/?$/, '');
 
 const API_BASE_URL = getApiUrl();
 
