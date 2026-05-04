@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { chatAPI, authAPI } from '../../services/api';
+import { getBackendOrigin } from "../../services/api";
 
 interface Message {
   _id?: string;
@@ -22,7 +23,13 @@ function parseProduk(pesan: string) {
     let foto = '';
     const fotoLine = pesan.split('\n')[0];
     if (fotoLine.startsWith('[FOTO_URL:')) {
-      foto = fotoLine.slice(10, -1);
+      const rawFoto = fotoLine.slice(10, -1);
+
+      // Jika masih pakai localhost, ganti dengan backend origin yang benar
+      foto = rawFoto.replace(
+        /^https?:\/\/(localhost|127\.0\.0\.1):\d+/,
+        getBackendOrigin()
+      );
     }
 
     const nama     = get('🌾');
