@@ -28,21 +28,26 @@ const API_BASE_URL = getApiUrl();
 
 export const getImageUrl = (path: string): string => {
   if (!path) return '';
-  
-  console.log('getImageUrl input:', path); // debug
-  
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    const result = path.replace(
-      /^https?:\/\/(localhost|127\.0\.0\.1):\d+/,
-      getBackendOrigin()
-    );
-    console.log('getImageUrl output (full url):', result); // debug
-    return result;
+
+  // Bersihkan double URL: "https://domain.comhttps://domain.com/uploads/..."
+  // Ambil bagian terakhir yang valid saja
+  const match = path.match(/(https?:\/\/[^h]+)(https?:\/\/.+)/);
+  if (match) {
+    // Ada double URL, ambil bagian kedua yang benar
+    return match[2];
   }
-  
-  const result = `${getBackendOrigin()}${path}`;
-  console.log('getImageUrl output (relative):', result); // debug
-  return result;
+
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    // Ganti localhost ke production
+    if (path.includes('localhost') || path.includes('127.0.0.1')) {
+      return path.replace(/^https?:\/\/(localhost|127\.0\.0\.1):\d+/, getBackendOrigin());
+    }
+    return path; // sudah full URL valid
+  }
+
+  // Path relatif: /uploads/... 
+  const separator = path.startsWith('/') ? '' : '/';
+  return `${getBackendOrigin()}${separator}${path}`;
 };
 
 const api = axios.create({
