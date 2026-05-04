@@ -129,7 +129,7 @@ export default function RiwayatPanen() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 bg-white rounded-t-[40px] mt-3 pt-8 overflow-y-auto pb-28 shadow-2xl">
+      <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-8 overflow-y-auto pb-28 shadow-2xl">
         {/* Tab Switcher */}
         <div className="flex items-center mx-4 mb-6 bg-[#f0f4e4] rounded-full p-1 border border-gray-100">
           <button
@@ -183,7 +183,7 @@ export default function RiwayatPanen() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4">
-                {panenList.map((item) => (
+                {[...panenList].reverse().map((item) => (
                   <div
                     key={item._id}
                     onClick={() => navigate(`/detail-panen/${item._id}`)}
@@ -234,7 +234,7 @@ export default function RiwayatPanen() {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {penjualanList.map((order) => {
+                {[...penjualanList].reverse().map((order) => {
                   const myMatch = order.matches.find((m: any) =>
                     panenList.some((p) => p._id === m.hasil_panen_id),
                   );

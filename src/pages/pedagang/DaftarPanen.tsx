@@ -103,7 +103,7 @@ export default function DaftarPanen() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-white rounded-t-[40px] px-5 pt-8 pb-28 relative">
+      <div className="flex-1 bg-white rounded-t-3xl px-5 pt-5 pb-28 relative">
         {/* Dropdown Filter Section */}
         <div className="mb-6 flex justify-between items-center relative z-30">
           <h2 className="text-lg font-bold text-gray-800">Daftar Panen</h2>

@@ -153,12 +153,12 @@ export default function HasilMatching() {
             {data.matches?.map((m: any, idx: number) => (
               <div
                 key={idx}
-                className="flex items-center gap-2 bg-[#f9faf5] p-3 rounded-2xl border border-gray-100"
+                className="flex items-center gap-2 bg-[#f9faf5] p-3 rounded-2xl border border-gray-100 group relative"
               >
                 <div className="w-10 h-10 rounded-full bg-[#7a8c2e] flex items-center justify-center text-white font-black text-sm shadow-sm">
                   {m.petani_nama ? m.petani_nama.charAt(0).toUpperCase() : "P"}
                 </div>
-                <div className="text-[10px] leading-tight min-w-0">
+                <div className="text-[10px] leading-tight min-w-0 flex-1">
                   <p className="font-bold text-gray-800 truncate">
                     {m.petani_nama}
                   </p>
@@ -167,6 +167,18 @@ export default function HasilMatching() {
                     {m.lokasi ? m.lokasi.split(",")[0] : "Aceh"}
                   </p>
                 </div>
+                <button
+                  onClick={() => {
+                    if (m.petani_id) {
+                      navigate(`/chat-pedagang/${m.petani_id}`);
+                    }
+                  }}
+                  disabled={!m.petani_id}
+                  className="text-lg opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Chat dengan Petani"
+                >
+                  💬
+                </button>
               </div>
             ))}
           </div>

@@ -1,19 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BottomNav from '../../components/layout/BottomNav';
 import { useAuth } from '../../context/AuthContext';
 import { panenAPI } from '../../services/api';
 import { Icon } from '@iconify/react';
 
-type Periode = 'bulan-ini' | 'bulan-lalu' | 'tahun-ini' | 'tahun-lalu';
 type TabType = 'semua' | 'pakan' | 'kompos' | 'limbah';
 type RecoveryType = 'pakan' | 'kompos';
-
-const periodeOptions: { id: Periode; label: string }[] = [
-  { id: 'bulan-ini',  label: 'Bulan Ini' },
-  { id: 'bulan-lalu', label: 'Bulan Lalu' },
-  { id: 'tahun-ini',  label: 'Tahun Ini' },
-  { id: 'tahun-lalu', label: 'Tahun Lalu' },
-];
 
 const tabOptions: { id: TabType; label: string }[] = [
   { id: 'semua',  label: 'Semua' },
@@ -63,7 +56,7 @@ function filterByTab(items: PanenItem[], tab: TabType): PanenItem[] {
 }
 
 export default function PemulihanPanen() {
-  const [periode, setPeriode] = useState<Periode>('bulan-ini');
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('semua');
   const [panenData, setPanenData] = useState<PanenItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -152,24 +145,6 @@ export default function PemulihanPanen() {
             <p className="text-sm opacity-80">Kelola panen grade C</p>
           </div>
         </div>
-
-        {/* Filter Periode */}
-        <p className="text-sm font-semibold mb-2">Filter & Periode</p>
-        <div className="flex gap-2 mb-3 overflow-x-auto pb-1 scrollbar-hide">
-          {periodeOptions.map(p => (
-            <button
-              key={p.id}
-              onClick={() => setPeriode(p.id)}
-              className={`text-xs px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                periode === p.id
-                  ? 'bg-white text-[#5a6e1a] font-semibold'
-                  : 'bg-white/20 text-white'
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Stats Bar */}
@@ -194,22 +169,6 @@ export default function PemulihanPanen() {
         <p className="text-base font-bold text-gray-800 px-4 mb-4">
           Kelola Kualitas & Kerusakan Panen
         </p>
-
-        {/* Mini Stats */}
-        <div className="grid grid-cols-3 gap-2 px-4 mb-4">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 text-center">
-            <p className="text-base font-bold text-red-600">{stats.rusak}</p>
-            <p className="text-[10px] text-gray-400 mt-0.5">Rusak</p>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 text-center">
-            <p className="text-base font-bold text-yellow-600">{stats.dipulih}</p>
-            <p className="text-[10px] text-gray-400 mt-0.5">Dipulihkan</p>
-          </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 text-center">
-            <p className="text-base font-bold text-green-600">{stats.total} Kg</p>
-            <p className="text-[10px] text-gray-400 mt-0.5">Total</p>
-          </div>
-        </div>
 
         {/* Tabs */}
         <div className="flex gap-2 px-4 mb-4 overflow-x-auto pb-1 scrollbar-hide">
@@ -242,7 +201,11 @@ export default function PemulihanPanen() {
             displayed.map(item => {
               const itemId = item._id || item.id || '';
               return (
-                <div key={itemId} className="bg-[#f5f4ee] rounded-2xl p-4">
+                <div 
+                  key={itemId} 
+                  onClick={() => navigate(`/detail-panen/${itemId}`)}
+                  className="bg-[#f5f4ee] rounded-2xl p-4 cursor-pointer active:scale-95 transition-all"
+                >
 
                   {/* Card Top */}
                   <div className="flex gap-3">

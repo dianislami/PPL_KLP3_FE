@@ -9,7 +9,10 @@ import PemulihanPanen from "./pages/petani/PemulihanPanen";
 import DetailPanen from "./pages/petani/DetailPanen";
 import StatusPengiriman from "./pages/petani/StatusPengiriman";
 import DetailArtikel from "./pages/petani/DetailArtikel";
-import Chat from "./pages/petani/Chat";
+import DaftarChatPetani from "./pages/petani/DaftarChatPetani";
+import ChatPetani from "./pages/petani/ChatPetani";
+import DaftarChatPedagang from "./pages/pedagang/DaftarChatPedagang";
+import ChatPedagang from "./pages/pedagang/ChatPedagang";
 import ProfilPetani from "./pages/petani/ProfilPetani";
 import DashboardPedagang from "./pages/pedagang/DashboardPedagang";
 import ProfilPedagang from "./pages/pedagang/ProfilPedagang";
@@ -44,7 +47,10 @@ export default function App() {
       <Route path="/daftar-panen" element={<DaftarPanen />} />
       <Route path="/detail-produk/:id" element={<DetailProduk />} />
       <Route path="/detail-artikel/:id" element={<DetailArtikel />} />
-      <Route path="/chat/:nama?" element={<Chat />} />
+      <Route path="/daftar-chat-petani" element={<DaftarChatPetani />} />
+      <Route path="/chat-petani/:id" element={<ChatPetani />} />
+      <Route path="/daftar-chat-pedagang" element={<DaftarChatPedagang />} />
+      <Route path="/chat-pedagang/:id" element={<ChatPedagang />} />
       <Route path="/hasil-matching/:id" element={<HasilMatching />} />
       <Route
         path="/status-pengiriman-pedagang/:id"

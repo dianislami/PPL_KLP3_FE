@@ -206,6 +206,32 @@ export default function DetailProduk() {
             Pesan Sekarang
           </button>
           <button
+            onClick={() => {
+              if (panen.user_id?._id) {
+                navigate(`/chat-pedagang/${panen.user_id._id}`, {
+                  state: {
+                    produk: {
+                      id: panen._id,
+                      nama: panen.nama_komoditas,
+                      harga: panen.harga,
+                      jumlah: panen.jumlah,
+                      kualitas: panen.kualitas,
+                      foto: panen.foto && panen.foto.length > 0 ? panen.foto[0].path : null,
+                      deskripsi: panen.deskripsi,
+                    }
+                  }
+                });
+              }
+            }}
+            disabled={!panen.user_id?._id}
+            className="bg-[#7a8c2e] text-white rounded-2xl py-4 font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Chat Petani
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 mb-6">
+          <button
             onClick={() => navigate("/daftar-panen")}
             className="bg-gray-100 text-gray-800 rounded-2xl py-4 font-bold active:scale-95 transition-all"
           >

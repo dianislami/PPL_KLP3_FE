@@ -28,6 +28,7 @@ export const authAPI = {
     alamat: string;
   }) => api.post("/users/register", data),
   getUsers: () => api.get("/users"),
+  getUserById: (id: string) => api.get(`/users/${id}`),
   updateUser: (
     id: string,
     data: { nama: string; email: string; alamat?: string },
@@ -63,6 +64,14 @@ export const permintaanAPI = {
 // src/services/api.ts
 export const weatherAPI = {
   get: (city: string) => api.get(`/weather?city=${city}`), 
+};
+
+// API endpoints untuk Chat
+export const chatAPI = {
+  getChatList: (userId: string) => api.get(`/chat/list/${userId}`),
+  getChatMessages: (userId: string, contactId: string) => api.get(`/chat/messages/${userId}/${contactId}`),
+  sendMessage: (senderId: string, receiverId: string, pesan: string) => api.post('/chat/send', { sender_id: senderId, receiver_id: receiverId, pesan }),
+  getUnreadCount: (userId: string) => api.get(`/chat/unread/${userId}`),
 };
 
 export default api;

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import BottomNav from '../../components/layout/BottomNav';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { panenAPI } from '../../services/api';
+import { panenAPI, chatAPI } from '../../services/api';
+import { Icon } from '@iconify/react';
+import { useAuth } from '../../context/AuthContext';
 
 interface Produk {
   id: string;
@@ -33,14 +35,37 @@ type ViewMode = 'grid' | 'list';
 
 export default function DashboardPedagang() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [search, setSearch]       = useState('');
   const [filter, setFilter]       = useState<FilterKategori>('Semua');
   const [viewMode, setViewMode]   = useState<ViewMode>('grid');
   const [dataPanen, setDataPanen] = useState<Produk[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     fetchPanen();
   }, []);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        if (user?.id) {
+          const response = await chatAPI.getUnreadCount(user.id);
+          setUnreadCount(response.data?.unreadCount || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching unread count:', error);
+      }
+    };
+
+    if (user?.id) fetchUnreadCount();
+    // Poll every 30 seconds
+    const interval = setInterval(() => {
+      if (user?.id) fetchUnreadCount();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [user?.id]);
 
 const fetchPanen = async () => {
   try {
@@ -118,8 +143,8 @@ const fetchPanen = async () => {
 
           {/* Search */}
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 text-lg">
-              🔍
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 text-xl">
+              <Icon icon="mdi:search" />
             </span>
             <input
               type="text"
@@ -154,22 +179,25 @@ const fetchPanen = async () => {
         {/* Content */}
         <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-5 overflow-y-auto pb-28">
           {/* Shortcut Menu */}
-          <div className="grid grid-cols-4 gap-3 px-4 mb-6">
+          <div className="grid grid-cols-2 gap-3 px-4 mb-3">
             {[
-              { label: "Pesanan", emoji: "📦", route: "/pesanan-pedagang" },
-              { label: "Riwayat", emoji: "🧾", route: "/riwayat-pedagang" },
-              { label: "Chat", emoji: "💬", route: "/chat/petani" },
-              { label: "Profil", emoji: "👤", route: "/profil-pedagang" },
+              { label: "Pesanan", emoji: 'mdi:trolley-outline', route: "/riwayat-pedagang" },
+              { label: "Chat", emoji: 'mdi:chat-outline', route: "/daftar-chat-pedagang" },
             ].map((m) => (
               <button
                 key={m.label}
                 onClick={() => navigate(m.route)}
-                className="flex flex-col items-center gap-1.5 bg-[#f5f7ee] border border-[#dde8b8] rounded-2xl py-3 active:scale-95 transition-all"
+                className="flex flex-col items-center gap-1.5 bg-[#f5f7ee] border border-[#dde8b8] rounded-2xl py-3 active:scale-95 transition-all relative"
               >
-                <span className="text-2xl">{m.emoji}</span>
+                <Icon icon={m.emoji} className="text-2xl text-[#5a6e1a]" />
                 <span className="text-[11px] font-semibold text-[#5a6e1a]">
                   {m.label}
                 </span>
+                {m.label === "Chat" && unreadCount > 0 && (
+                  <div className="absolute -top-2 -right-2 bg-[#7a8c2e] text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </div>
+                )}
               </button>
             ))}
           </div>

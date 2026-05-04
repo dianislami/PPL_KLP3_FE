@@ -10,13 +10,8 @@ interface Step {
   status: StepStatus;
   title: string;
   desc: string | React.ReactNode;
+  icon?: string;
 }
-
-const ICONS = {
-  delivery: 'mdi:truck-fast-outline',
-  map: 'mdi:map-outline',
-  chat: 'mdi:chat'
-};
 
 interface PanenData {
   _id: string;
@@ -29,7 +24,7 @@ interface PanenData {
 function StepIcon({ status }: { status: StepStatus }) {
   if (status === 'done') {
     return (
-      <div className="w-12 h-12 rounded-full bg-[#5a7a1a] flex items-center justify-center flex-shrink-0 z-10">
+      <div className="w-10 h-10 rounded-full bg-[#5a7a1a] flex items-center justify-center flex-shrink-0 z-10">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
           <path d="M4 11.5L9 16.5L18 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -38,7 +33,7 @@ function StepIcon({ status }: { status: StepStatus }) {
   }
   if (status === 'active') {
     return (
-      <div className="w-12 h-12 rounded-full bg-[#c8d87a] border-4 border-[#e8f0b0] flex items-center justify-center flex-shrink-0 z-10">
+      <div className="w-10 h-10 rounded-full bg-[#c8d87a] border-4 border-[#e8f0b0] flex items-center justify-center flex-shrink-0 z-10">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path d="M10 4v6l4 2" stroke="#5a7a1a" strokeWidth="2" strokeLinecap="round" />
           <circle cx="10" cy="10" r="8" stroke="#5a7a1a" strokeWidth="2" />
@@ -47,7 +42,7 @@ function StepIcon({ status }: { status: StepStatus }) {
     );
   }
   return (
-    <div className="w-12 h-12 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center flex-shrink-0 z-10">
+    <div className="w-10 h-10 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center flex-shrink-0 z-10">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M10 4v6l4 2" stroke="#aaa" strokeWidth="2" strokeLinecap="round" />
         <circle cx="10" cy="10" r="8" stroke="#aaa" strokeWidth="2" />
@@ -103,30 +98,36 @@ export default function StatusPengiriman() {
     return null;
   };
 
+  const calculateEstimatedTime = () => {
+    const pickupTime = new Date(permintaan.tanggal);
+    const estimatedDelivery = new Date(pickupTime.getTime() + 4 * 60 * 60 * 1000); // Add 4 hours
+    return estimatedDelivery.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  };
+
   const steps: Step[] = [
+    {
+      id: 4,
+      status: 'done',
+      title: 'Diterima',
+      desc: `Pedagang: ${permintaan.user_id?.nama || 'Pembeli'}\nAlamat: ${permintaan.user_id?.alamat || 'Lokasi belum diatur'}`,
+    },
+    {
+      id: 3,
+      status: 'done',
+      title: 'Tiba di Gudang',
+      desc: `Menuju: ${permintaan.user_id?.alamat || 'Lokasi belum diatur'}, Est. ${calculateEstimatedTime()} WIB`,
+    },
+    {
+      id: 2,
+      status: 'done',
+      title: 'Dalam Perjalanan',
+      desc: `Dari Petani Penyuplai ke Gudang Pusat, Banda Aceh`,
+    },
     {
       id: 1,
       status: 'done',
       title: 'Diambil',
       desc: `Dari Petani Penyuplai, ${new Date(permintaan.tanggal).toLocaleTimeString('id-ID')} WIB`,
-    },
-    {
-      id: 2,
-      status: 'active',
-      title: 'Dalam Perjalanan',
-      desc: 'custom',
-    },
-    {
-      id: 3,
-      status: 'pending',
-      title: 'Tiba di Gudang',
-      desc: `Menuju: ${permintaan.user_id?.alamat || 'Banda Aceh'}, Est. 14:00 WIB`,
-    },
-    {
-      id: 4,
-      status: 'pending',
-      title: 'Diterima',
-      desc: `Pedagang: ${permintaan.user_id?.nama || 'Pembeli'}\nAlamat: ${permintaan.user_id?.alamat || 'Banda Aceh'}`,
     },
   ];
 
@@ -200,9 +201,9 @@ export default function StatusPengiriman() {
 
         {/* Timeline */}
         <div className="relative flex flex-col gap-0">
+          <p className="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-widest">Status Pengiriman</p>
           {steps.map((step, idx) => {
             const isLast = idx === steps.length - 1;
-            const isActive = step.status === 'active';
             const isDone = step.status === 'done';
 
             return (
@@ -222,39 +223,33 @@ export default function StatusPengiriman() {
 
                 {/* Content */}
                 <div className={`flex-1 pb-6 ${isLast ? 'pb-2' : ''}`}>
-                  {isActive ? (
+                  {step.id === 2 ? (
                     <div className="bg-[#f0f5e0] rounded-2xl p-4">
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="font-bold text-gray-900 text-base">{step.title}</p>
                           <p className="text-sm text-gray-600 mt-0.5">
-                            Menuju Gudang Pusat,<br />Banda Aceh
+                            {step.desc as string}
                           </p>
                         </div>
-                        <Icon icon={ICONS.map} className="text-4xl text-[#7a8c2e]" />
+                        {step.icon && (
+                          <Icon icon={step.icon} className="text-5xl text-[#7a8c2e]" />
+                        )}
                       </div>
                       <div className="flex items-center gap-3 mt-3 pt-3 border-t border-[#d8e8a0]">
-                        <Icon icon={ICONS.delivery} className="text-4xl text-[#7a8c2e]" />
+                        <Icon icon="mdi:truck-fast-outline" className="text-4xl text-[#7a8c2e]" />
                         <div>
-                          <p className="text-sm font-semibold text-gray-800">Pickup - BL 1234 APT</p>
-                          <p className="text-xs text-gray-500">Driver: Budi Sudarsono</p>
+                          <p className="text-sm font-semibold text-gray-800">Pengiriman - {permintaan.nomor_permintaan}</p>
+                          <p className="text-xs text-gray-500">Status: Dalam Pengiriman</p>
                         </div>
                       </div>
                     </div>
                   ) : (
                     <div className="pt-2">
-                      <p
-                        className={`font-bold text-base ${
-                          isDone ? 'text-gray-900' : 'text-gray-400'
-                        }`}
-                      >
+                      <p className="font-bold text-base text-gray-900">
                         {step.title}
                       </p>
-                      <p
-                        className={`text-sm mt-0.5 whitespace-pre-line ${
-                          isDone ? 'text-gray-600' : 'text-gray-400'
-                        }`}
-                      >
+                      <p className="text-sm mt-0.5 whitespace-pre-line text-gray-600">
                         {step.desc as string}
                       </p>
                     </div>

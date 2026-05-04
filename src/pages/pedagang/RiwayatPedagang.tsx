@@ -123,7 +123,7 @@ export default function RiwayatPedagang() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 bg-white rounded-t-[40px] mt-3 pt-8 overflow-y-auto pb-28 shadow-2xl">
+      <div className="flex-1 bg-white rounded-t-3xl mt-3 pt-8 overflow-y-auto pb-28 shadow-2xl">
         {/* Tab Filter */}
         <div className="flex gap-2 px-4 mb-6">
           {(["Selesai", "Pending", "Dibatalkan"] as StatusFilter[]).map((f) => (
@@ -155,7 +155,7 @@ export default function RiwayatPedagang() {
               </p>
             </div>
           ) : (
-            filteredData.map((item) => {
+            [...filteredData].reverse().map((item) => {
               const style = getStyleData(item.nama_komoditas);
               return (
                 <div
@@ -185,8 +185,8 @@ export default function RiwayatPedagang() {
                       Grade {item.kualitas} · {item.jumlah} Kg
                     </p>
 
-                    <div className="flex justify-between items-center border-t border-dashed border-gray-100 mt-4 pt-3">
-                      <p className="text-[10px] font-bold text-gray-400">
+                    <div className="flex justify-between items-center border-t border-dashed border-gray-100 mt-4 pt-3 gap-2">
+                      <p className="text-[10px] font-bold text-gray-400 flex-1">
                         {new Date(item.tanggal).toLocaleDateString("id-ID")}
                       </p>
 
@@ -197,17 +197,33 @@ export default function RiwayatPedagang() {
                         </span>
                       ) : (
                         statusFilter === "Selesai" && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation(); // Mencegah klik container (Matching)
-                              navigate(
-                                `/status-pengiriman-pedagang/${item._id}`,
-                              );
-                            }}
-                            className="text-[10px] font-black text-blue-500 underline uppercase"
-                          >
-                            Lihat Status ›
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(
+                                  `/status-pengiriman-pedagang/${item._id}`,
+                                );
+                              }}
+                              className="text-[10px] font-black text-blue-500 underline uppercase"
+                            >
+                              Lihat Status
+                            </button>
+                            {item.matches && item.matches.length > 0 && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  const firstPetaniId = item.matches[0].petani_id;
+                                  if (firstPetaniId) {
+                                    navigate(`/chat-pedagang/${firstPetaniId}`);
+                                  }
+                                }}
+                                className="text-[10px] font-black text-[#7a8c2e] hover:text-[#5a6e1a] transition-all"
+                              >
+                                💬 Chat
+                              </button>
+                            )}
+                          </div>
                         )
                       )}
                     </div>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import artikelData from "../data/artikelBerita.json";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/AuthContext";
-import { weatherAPI } from "../../services/api";
+import { weatherAPI, chatAPI } from "../../services/api";
 
 interface Artikel {
   id: string;
@@ -30,7 +30,7 @@ interface WeatherData {
 const ICONS = {
   recovery: "mdi:recycle",
   delivery: "mdi:truck-fast-outline",
-  history: "mdi:clipboard-clock-outline",
+  chat: "mdi:chat-outline",
   search: "mdi:magnify",
 };
 
@@ -40,6 +40,7 @@ export default function DashboardPetani() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -72,6 +73,27 @@ export default function DashboardPetani() {
 
     if (user) fetchWeather();
   }, [user]);
+
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        if (user?.id) {
+          const response = await chatAPI.getUnreadCount(user.id);
+          setUnreadCount(response.data?.unreadCount || 0);
+        }
+      } catch (error) {
+        console.error("Error fetching unread count:", error);
+      }
+    };
+
+    if (user?.id) fetchUnreadCount();
+    // Poll every 30 seconds
+    const interval = setInterval(() => {
+      if (user?.id) fetchUnreadCount();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [user?.id]);
 
   const handleInputPanen = () => navigate("/tambah-panen");
 
@@ -212,14 +234,19 @@ export default function DashboardPetani() {
         {/* Info Cards */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <button
-            onClick={() => navigate("/riwayat-panen")}
-            className="bg-[#e8efd6] border-2 border-[#7a8c2e] rounded-2xl p-4 text-center active:scale-95 flex flex-col items-center transition-all"
+            onClick={() => navigate("/daftar-chat-petani")}
+            className="bg-[#e8efd6] border-2 border-[#7a8c2e] rounded-2xl p-4 text-center active:scale-95 flex flex-col items-center transition-all relative"
           >
             <Icon
-              icon={ICONS.history}
+              icon={ICONS.chat}
               className="text-3xl mb-2 text-[#7a8c2e]"
             />
-            <p className="font-bold text-gray-800 text-xs">Riwayat Panen</p>
+            <p className="font-bold text-gray-800 text-xs">Daftar Chat</p>
+            {unreadCount > 0 && (
+              <div className="absolute -top-2 -right-2 bg-[#7a8c2e] text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </div>
+            )}
           </button>
           <button
             onClick={() => navigate("/pemulihan-panen")}

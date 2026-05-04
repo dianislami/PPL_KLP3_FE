@@ -143,7 +143,7 @@ export default function InputKebutuhan() {
       </div>
 
       {/* FORM CONTENT */}
-      <div className="flex-1 bg-white rounded-t-[40px] px-5 pt-8 pb-28 shadow-xl overflow-y-auto">
+      <div className="flex-1 bg-white rounded-t-3xl px-5 pt-8 pb-28 shadow-xl overflow-y-auto">
         <div className="bg-[#f9faf5] rounded-[30px] p-6 border border-[#7a8c2e]/10">
           <h3 className="font-bold text-[#3a4e10] mb-6 text-sm flex items-center gap-2">
             <Icon icon="mdi:form-select" className="text-lg" />
