@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { panenAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { Icon } from '@iconify/react';
+import { getBackendOrigin } from "../../services/api";
 
 interface PanenDetail {
   _id: string;
@@ -135,7 +136,7 @@ export default function DetailPanen() {
           <div className="w-44 h-68 rounded-2xl bg-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
             {panen.foto && panen.foto.length > 0 && panen.foto[0].path ? (
               <img 
-                src={`http://localhost:5000${panen.foto[0].path}`} 
+                src={`${getBackendOrigin()}${panen.foto[0].path}`} 
                 alt={panen.nama_komoditas} 
                 className="w-full h-full object-cover"
                 onError={(e) => {

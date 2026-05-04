@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { panenAPI } from "../../services/api";
-import { Icon } from "@iconify/react"; // Tambahkan icon untuk lokasi
+import { Icon } from "@iconify/react";
+import { getBackendOrigin } from "../../services/api";
 
 interface PanenDetail {
   _id: string;
@@ -134,7 +135,7 @@ export default function DetailProduk() {
           <div className="w-44 h-68 rounded-2xl bg-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
             {panen.foto && panen.foto.length > 0 ? (
               <img
-                src={`http://localhost:5000${panen.foto[0].path}`}
+                src={`${getBackendOrigin()}${panen.foto[0].path}`}
                 alt={panen.nama_komoditas}
                 className="w-full h-full object-cover"
               />
@@ -214,7 +215,7 @@ export default function DetailProduk() {
                       harga: panen.harga,
                       jumlah: panen.jumlah,
                       kualitas: panen.kualitas,
-                      foto: panen.foto && panen.foto.length > 0 ? panen.foto[0].path : null,
+                      foto: panen.foto && panen.foto.length > 0 ? `${getBackendOrigin()}${panen.foto[0].path}` : null,
                       deskripsi: panen.deskripsi,
                     }
                   }

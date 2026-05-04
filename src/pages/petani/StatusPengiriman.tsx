@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { permintaanAPI, panenAPI } from '../../services/api';
+import { getBackendOrigin } from "../../services/api";
 
 type StepStatus = 'done' | 'active' | 'pending';
 
@@ -92,7 +93,7 @@ export default function StatusPengiriman() {
       const firstMatch = permintaan.matches[0];
       const panenItem = panenList.find(p => p._id === firstMatch.hasil_panen_id);
       if (panenItem?.foto && panenItem.foto.length > 0) {
-        return `http://localhost:5000${panenItem.foto[0].path}`;
+        return `${getBackendOrigin()}${panenItem.foto[0].path}`;
       }
     }
     return null;

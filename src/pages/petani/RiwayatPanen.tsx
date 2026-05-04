@@ -307,7 +307,7 @@ export default function RiwayatPanen() {
                             if (panenItem?.foto && panenItem.foto.length > 0) {
                               return (
                                 <img
-                                  src={`http://localhost:5000${panenItem.foto[0].path}`}
+                                  src={`${getBackendOrigin()}${panenItem.foto[0].path}`}
                                   className="w-full h-full object-cover"
                                 />
                               );

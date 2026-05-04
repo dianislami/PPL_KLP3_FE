@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../../context/AuthContext";
 import { panenAPI } from "../../services/api";
+import { getBackendOrigin } from "../../services/api";
 
 const IconChevron = ({ isOpen }: { isOpen: boolean }) => (
   <div
@@ -89,7 +90,7 @@ export default function TambahPanen() {
       formData.append("deskripsi", deskripsi);
       if (gambar) formData.append("gambar", gambar);
 
-      const response = await fetch("http://localhost:5000/api/panen", {
+      const response = await fetch(`${getBackendOrigin()}/api/panen`, {
         method: "POST",
         body: formData,
       });

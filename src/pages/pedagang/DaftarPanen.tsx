@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { panenAPI } from "../../services/api";
 import BottomNav from "../../components/layout/BottomNav";
 import { Icon } from "@iconify/react";
+import { getBackendOrigin } from "../../services/api";
 
 interface PanenItem {
   _id: string;
@@ -66,7 +67,7 @@ export default function DaftarPanen() {
   });
 
   const getImageUrl = (foto?: { path: string }[]): string => {
-    if (foto && foto.length > 0) return `http://localhost:5000${foto[0].path}`;
+    if (foto && foto.length > 0) return `${getBackendOrigin()}${foto[0].path}`;
     return "https://images.pexels.com/photos/143133/pexels-photo-143133.jpeg?auto=compress&cs=tinysrgb&w=1200";
   };
 

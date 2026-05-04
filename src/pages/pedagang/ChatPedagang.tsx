@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { chatAPI, authAPI } from '../../services/api';
+import { getBackendOrigin } from "../../services/api";
 
 interface Message {
   _id?: string;
@@ -176,12 +177,12 @@ export default function ChatPedagang() {
         if (Array.isArray(p.foto) && p.foto.length > 0) {
           const foto0 = p.foto[0];
           if (typeof foto0 === 'string') {
-            fotoUrl = `http://localhost:5000${foto0}`;
+            fotoUrl = `${getBackendOrigin()}${foto0}`;
           } else if (foto0?.path) {
-            fotoUrl = `http://localhost:5000${foto0.path}`;
+            fotoUrl = `${getBackendOrigin()}${foto0.path}`;
           }
         } else if (typeof p.foto === 'string') {
-          fotoUrl = `http://localhost:5000${p.foto}`;
+          fotoUrl = `${getBackendOrigin()}${p.foto}`;
         }
       }
       

@@ -4,6 +4,7 @@ import BottomNav from '../../components/layout/BottomNav';
 import { useAuth } from '../../context/AuthContext';
 import { panenAPI } from '../../services/api';
 import { Icon } from '@iconify/react';
+import { getBackendOrigin } from "../../services/api";
 
 type TabType = 'semua' | 'pakan' | 'kompos' | 'limbah';
 type RecoveryType = 'pakan' | 'kompos';
@@ -212,7 +213,7 @@ export default function PemulihanPanen() {
                     <div className="w-[100px] h-[100px] rounded-xl bg-gray-200 flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden">
                       {item.foto && item.foto.length > 0 ? (
                         <img 
-                          src={`http://localhost:5000${item.foto[0].path}`}
+                          src={`${getBackendOrigin()}${item.foto[0].path}`}
                           alt={item.nama_komoditas}
                           className="w-full h-full object-cover"
                           onError={(e) => {

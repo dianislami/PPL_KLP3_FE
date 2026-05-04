@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { panenAPI, chatAPI } from '../../services/api';
 import { Icon } from '@iconify/react';
 import { useAuth } from '../../context/AuthContext';
+import { getBackendOrigin } from "../../services/api";
 
 interface Produk {
   id: string;
@@ -113,7 +114,7 @@ const fetchPanen = async () => {
 
     const getImageUrl = (foto?: { path: string }[]): string => {
       if (foto && foto.length > 0 && foto[0].path) {
-        return `http://localhost:5000${foto[0].path}`;
+        return `${getBackendOrigin()}${foto[0].path}`;
       }
       return "https://images.pexels.com/photos/2468876/pexels-photo-2468876.jpeg?auto=compress&cs=tinysrgb&w=1200";
     };
