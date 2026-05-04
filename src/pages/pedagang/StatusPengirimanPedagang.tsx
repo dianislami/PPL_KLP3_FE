@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BottomNav from "../../components/layout/BottomNav";
 import { useAuth } from "../../context/AuthContext";
 import { permintaanAPI } from "../../services/api";
@@ -26,6 +26,7 @@ const IconCheckStatus = () => (
 
 export default function StatusPengiriman() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [data, setData] = useState<any>(null);
 
@@ -48,14 +49,17 @@ export default function StatusPengiriman() {
   return (
     <div className="w-full min-h-screen bg-[#F5F5F5] flex flex-col pb-28">
       {/* Header Section */}
-      <div className="bg-[#7a8c2e] px-5 pt-10 pb-12 text-white relative flex-shrink-0">
-        <div className="flex justify-between items-start mb-4">
-          <h1 className="text-3xl font-bold text-white uppercase">
-            Hallo, {user?.nama?.split(" ")[0]}
+      <div className="bg-[#7a8c2e] px-5 pt-10 pb-6 text-white relative flex-shrink-0">
+        <div className="flex items-center gap-3 mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center active:scale-95 transition-all"
+          >
+            <span className="text-gray-700 font-bold text-lg leading-none">‹</span>
+          </button>
+          <h1 className="text-2xl font-bold text-white">
+            Status Pengiriman
           </h1>
-          <div className="w-10 h-10 rounded-full bg-[#9aaa3f] flex items-center justify-center">
-            🏪
-          </div>
         </div>
 
         <div className="flex items-start gap-2 bg-white/10 backdrop-blur-sm p-3 rounded-2xl border border-white/10">

@@ -4,6 +4,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import DashboardPetani from "./pages/petani/DashboardPetani";
 import TambahPanen from "./pages/petani/TambahPanen";
+import EditPanen from "./pages/petani/EditPanen";
 import RiwayatPanen from "./pages/petani/RiwayatPanen";
 import PemulihanPanen from "./pages/petani/PemulihanPanen";
 import DetailPanen from "./pages/petani/DetailPanen";
@@ -24,8 +25,10 @@ import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang"
 import DetailProduk from "./pages/pedagang/DetailProduk";
 import UbahKataSandi from "./pages/petani/UbahKataSandi";
 import PanduanKualitas from "./pages/petani/PanduanKualitas";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import Monitoring from "./pages/admin/Monitoring";
 import KelolaPengguna from "./pages/admin/kelolapengguna";
+import ProfilAdmin from "./pages/admin/ProfilAdmin";
 
 export default function App() {
   return (
@@ -35,6 +38,7 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/dashboard-petani" element={<DashboardPetani />} />
       <Route path="/tambah-panen" element={<TambahPanen />} />
+      <Route path="/edit-panen/:id" element={<EditPanen />} />
       <Route path="/pemulihan-panen" element={<PemulihanPanen />} />
       <Route path="/riwayat-panen" element={<RiwayatPanen />} />
       <Route path="/detail-panen/:id" element={<DetailPanen />} />
@@ -54,12 +58,11 @@ export default function App() {
       <Route path="/daftar-chat-pedagang" element={<DaftarChatPedagang />} />
       <Route path="/chat-pedagang/:id" element={<ChatPedagang />} />
       <Route path="/hasil-matching/:id" element={<HasilMatching />} />
-      <Route
-        path="/status-pengiriman-pedagang/:id"
-        element={<StatusPengirimanPedagang />}
-      />
+      <Route path="/status-pengiriman-pedagang/:id" element={<StatusPengirimanPedagang />} />
       <Route path="/monitoring" element={<Monitoring />} />
       <Route path="/kelola-pengguna" element={<KelolaPengguna />} />
+      <Route path="/profil-admin" element={<ProfilAdmin />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/panduan-kualitas" element={<PanduanKualitas />} />
     </Routes>
   );

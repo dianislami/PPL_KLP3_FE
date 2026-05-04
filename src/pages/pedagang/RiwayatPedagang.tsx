@@ -209,20 +209,6 @@ export default function RiwayatPedagang() {
                             >
                               Lihat Status
                             </button>
-                            {item.matches && item.matches.length > 0 && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const firstPetaniId = item.matches[0].petani_id;
-                                  if (firstPetaniId) {
-                                    navigate(`/chat-pedagang/${firstPetaniId}`);
-                                  }
-                                }}
-                                className="text-[10px] font-black text-[#7a8c2e] hover:text-[#5a6e1a] transition-all"
-                              >
-                                💬 Chat
-                              </button>
-                            )}
                           </div>
                         )
                       )}

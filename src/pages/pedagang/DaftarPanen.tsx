@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { panenAPI } from "../../services/api";
 import BottomNav from "../../components/layout/BottomNav";
 import { Icon } from "@iconify/react";
-import { useAuth } from "../../context/AuthContext"; 
 
 interface PanenItem {
   _id: string;
@@ -18,7 +17,6 @@ interface PanenItem {
 }
 
 export default function DaftarPanen() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [dataPanen, setDataPanen] = useState<PanenItem[]>([]);
 
@@ -80,23 +78,12 @@ export default function DaftarPanen() {
   return (
     <div className="w-full min-h-screen bg-[#7a8c2e] flex flex-col font-sans">
       {/* Header Section */}
-      <div className="px-5 pt-10 pb-8 text-white flex-shrink-0">
+      <div className="px-5 pt-10 pb-4 text-white flex-shrink-0">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="text-3xl font-bold">Produk Panen</h1>
             <p className="text-sm opacity-80 mt-1">
               Temukan produk terbaik dari petani lokal
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm p-3 rounded-2xl border border-white/10">
-          <Icon icon="mdi:map-marker" className="text-xl text-[#dce6a7]" />
-          <div className="text-[11px]">
-            {/* 3. Ganti nama CV dan Alamat di sini */}
-            <p className="font-bold uppercase">{user?.nama || 'CV. Hasil Bumi Sejahtera'}</p>
-            <p className="opacity-80 leading-tight">
-              {user?.alamat || 'Lokasi belum diatur'}
             </p>
           </div>
         </div>

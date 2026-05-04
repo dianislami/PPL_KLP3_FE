@@ -17,6 +17,7 @@ interface PanenData {
   kualitas: string;
   foto?: Array<{ path: string }>;
   deskripsi?: string;
+  recovery?: { jenis?: 'pakan' | 'kompos' };
 }
 
 export default function RiwayatPanen() {
@@ -29,7 +30,23 @@ export default function RiwayatPanen() {
   const [panenList, setPanenList] = useState<PanenData[]>([]);
   const [penjualanList, setPenjualanList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+  const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async (id: string) => {
+    setDeleting(true);
+    try {
+      await panenAPI.delete(id);
+      setPanenList(panenList.filter(p => p._id !== id));
+      setShowDeleteModal(null);
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Gagal menghapus panen');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -184,35 +201,71 @@ export default function RiwayatPanen() {
             ) : (
               <div className="grid grid-cols-2 gap-4">
                 {[...panenList].reverse().map((item) => (
-                  <div
-                    key={item._id}
-                    onClick={() => navigate(`/detail-panen/${item._id}`)}
-                    className="relative rounded-[30px] overflow-hidden h-48 bg-gray-100 shadow-sm border border-gray-50 active:scale-95 transition-all cursor-pointer"
-                  >
-                    <img
-                      src={
-                        item.foto && item.foto.length > 0
-                          ? `http://localhost:5000${item.foto[0].path}`
-                          : "/images/default-panen.jpg" // <-- fallback image
-                      }
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-3 text-center">
-                      <p className="font-black text-white text-xs uppercase tracking-tighter">
-                        {item.nama_komoditas}
-                      </p>
-                      <p className="text-white text-[10px] opacity-80 mt-1 font-bold">
-                        Grade {item.kualitas} ·{" "}
-                        {new Date(item.tanggal).toLocaleDateString("id-ID", {
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </p>
+                  <div key={item._id} className="relative group">
+                    <div
+                      onClick={() => navigate(`/detail-panen/${item._id}`)}
+                      className="relative rounded-[30px] overflow-hidden h-48 bg-gray-100 shadow-sm border border-gray-50 active:scale-95 transition-all cursor-pointer"
+                    >
+                      <img
+                        src={
+                          item.foto && item.foto.length > 0
+                            ? `http://localhost:5000${item.foto[0].path}`
+                            : "/images/default-panen.jpg"
+                        }
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-3 text-center">
+                        <p className="font-black text-white text-xs uppercase tracking-tighter">
+                          {item.nama_komoditas}
+                        </p>
+                        <p className="text-white text-[10px] opacity-80 mt-1 font-bold">
+                          Grade {item.kualitas} ·{" "}
+                          {new Date(item.tanggal).toLocaleDateString("id-ID", {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                      </div>
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-xl px-2 py-1 shadow-sm">
+                        <p className="text-[10px] text-gray-800 font-black">
+                          {item.jumlah} Kg
+                        </p>
+                      </div>
+                      {item.recovery?.jenis && (
+                        <div 
+                          className="absolute top-3 left-3 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1"
+                          style={{
+                            background: item.recovery.jenis === 'pakan' ? '#DBEAFE' : '#DCFCE7',
+                            color: item.recovery.jenis === 'pakan' ? '#1E40AF' : '#15803D'
+                          }}
+                        >
+                          <span>{item.recovery.jenis === 'pakan' ? '🐄' : '♻️'}</span>
+                          <span>{item.recovery.jenis === 'pakan' ? 'Pakan' : 'Kompos'}</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-xl px-2 py-1 shadow-sm">
-                      <p className="text-[10px] text-gray-800 font-black">
-                        {item.jumlah} Kg
-                      </p>
+
+                    {/* Action Buttons */}
+                    <div className="absolute bottom-2 left-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/edit-panen/${item._id}`);
+                        }}
+                        className="flex-1 bg-[#7a8c2e] hover:bg-[#6a7a26] text-white py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-all"
+                      >
+                        <Icon icon="mdi:pencil" className="text-base" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowDeleteModal(item._id);
+                        }}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-bold transition-all"
+                      >
+                        <Icon icon="mdi:trash-can-outline" className="text-base" />
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -328,6 +381,38 @@ export default function RiwayatPanen() {
           </div>
         )}
       </div>
+
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Konfirmasi Hapus</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Yakin ingin menghapus hasil panen ini? Tindakan ini tidak dapat dibatalkan.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(null)}
+                disabled={deleting}
+                className="flex-1 bg-gray-300 hover:bg-gray-400 disabled:opacity-50 text-gray-700 font-bold py-2 rounded-lg transition-all"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  if (showDeleteModal) {
+                    handleDelete(showDeleteModal);
+                  }
+                }}
+                disabled={deleting}
+                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-bold py-2 rounded-lg transition-all"
+              >
+                {deleting ? 'Menghapus...' : 'Hapus'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BottomNav role="petani" />
     </div>

@@ -230,34 +230,30 @@ export default function PemulihanPanen() {
                       <p className="text-sm text-gray-500">Harga: {item.harga ? `Rp ${item.harga.toLocaleString('id-ID')}/Kg` : '-'}</p>
                       <p className="text-sm text-gray-500">Kualitas: {item.kualitas}</p>
                       {item.recovery?.jenis && (
-                        <span className={`inline-block text-[10px] font-bold px-2.5 py-1 rounded-full mt-1.5 ${
-                          item.recovery.jenis === 'pakan' 
-                            ? 'bg-blue-100 text-blue-800' 
-                            : 'bg-green-100 text-green-800'
-                        }`}>
-                          <span
-                            className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full ${
-                              item.recovery.jenis === 'pakan' 
-                                ? 'bg-blue-100 text-blue-800' 
-                                : 'bg-green-100 text-green-800'
-                            }`}
-                          >
-                            <Icon
-                              icon={item.recovery.jenis === 'pakan' ? ICONS.pakan : ICONS.kompos}
-                              className="text-sm"
-                            />
-                            {item.recovery.jenis === 'pakan' ? 'Pakan Ternak' : 'Kompos'}
-                          </span>
-                        </span>
+                        <div className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full mt-2 w-fit"
+                          style={{
+                            background: item.recovery.jenis === 'pakan' ? '#DBEAFE' : '#DCFCE7',
+                            color: item.recovery.jenis === 'pakan' ? '#1E40AF' : '#15803D'
+                          }}
+                        >
+                          <Icon
+                            icon={item.recovery.jenis === 'pakan' ? ICONS.pakan : ICONS.kompos}
+                            className="text-sm"
+                          />
+                          <span>{item.recovery.jenis === 'pakan' ? 'Pakan Ternak' : 'Kompos'}</span>
+                        </div>
                       )}
                     </div>
                   </div>
 
                   {/* Action Buttons */}
                   {!item.recovery?.jenis && (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-3">
                       <button 
-                        onClick={() => openRecoveryModal(itemId)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openRecoveryModal(itemId);
+                        }}
                         className="flex-1 bg-[#5a6e1a] text-white text-xs font-semibold px-4 py-2.5 rounded-full hover:bg-[#4a5c0a] transition-all"
                       >
                         Pilih Pemulihan
@@ -275,12 +271,12 @@ export default function PemulihanPanen() {
 
       {/* Recovery Modal */}
       {showRecoveryModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-end z-50">
-          <div className="bg-white w-full rounded-t-3xl p-6 max-h-[60vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 flex items-end justify-center pt-12 z-[9999]">
+          <div className="bg-white w-[95%] max-w-md rounded-3xl p-6 shadow-2xl">
             <h3 className="text-lg font-bold text-gray-900 mb-2">Pilih Jenis Pemulihan</h3>
             <p className="text-sm text-gray-500 mb-6">Produk ini akan masuk ke halaman Hasil Panen dengan tag limbah yang dipilih</p>
 
-            <div className="flex flex-col gap-3 mb-6">
+            <div className="flex flex-col gap-3 mb-6 max-h-[50vh] overflow-y-auto">
               {recoveryOptions.map(option => (
                 <button
                   key={option.id}

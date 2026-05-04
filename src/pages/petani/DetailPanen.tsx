@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { panenAPI } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { Icon } from '@iconify/react';
 
 interface PanenDetail {
   _id: string;
@@ -13,6 +15,7 @@ interface PanenDetail {
   deskripsi: string;
   foto?: Array<{ path: string }>;
   user_id?: { _id: string; nama: string };
+  recovery?: { jenis?: 'pakan' | 'kompos' };
 }
 
 const statusColor: Record<string, string> = {
@@ -30,8 +33,13 @@ const kualitasEmoji: Record<string, string> = {
 export default function DetailPanen() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [panen, setPanen] = useState<PanenDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const isOwner = panen?.user_id?._id === user?.id;
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -78,6 +86,19 @@ export default function DetailPanen() {
     );
   }
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await panenAPI.delete(id!);
+      setShowDeleteModal(false);
+      navigate('/riwayat-panen');
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Gagal menghapus panen');
+      setDeleting(false);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
 
@@ -90,12 +111,16 @@ export default function DetailPanen() {
           <span className="text-gray-700 font-bold text-lg leading-none">‹</span>
         </button>
         <h1 className="text-lg font-bold text-gray-900">Hasil</h1>
-        <button
-          onClick={() => navigate('/tambah-panen')}
-          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center active:scale-95 transition-all"
-        >
-          <span className="text-gray-700 font-bold text-xl leading-none">+</span>
-        </button>
+        {isOwner ? (
+          <button
+            onClick={() => navigate(`/edit-panen/${id}`)}
+            className="w-10 h-10 rounded-full bg-[#7a8c2e] flex items-center justify-center active:scale-95 transition-all text-white"
+          >
+            <Icon icon="mdi:pencil" className="text-lg" />
+          </button>
+        ) : (
+          <div className="w-10" />
+        )}
       </div>
 
       {/* Content */}
@@ -114,7 +139,6 @@ export default function DetailPanen() {
                 alt={panen.nama_komoditas} 
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  // Fallback ke emoji jika gambar tidak ditemukan
                   const img = e.currentTarget;
                   img.style.display = 'none';
                   img.parentElement!.innerHTML = '<span style="font-size: 80px">🌱</span>';
@@ -161,13 +185,25 @@ export default function DetailPanen() {
         )}
 
         {/* Badge row */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 flex-wrap">
           <span className="text-xs font-bold px-4 py-2 rounded-full text-green-700 bg-green-50">
             {kualitasEmoji[panen.kualitas] || '⭐'} Grade {panen.kualitas}
           </span>
           <span className={`text-xs font-bold px-4 py-2 rounded-full ${statusColor[panen.status.toLowerCase()] || 'text-gray-600 bg-gray-100'}`}>
             {panen.status}
           </span>
+          {panen.recovery?.jenis && (
+            <span 
+              className="text-xs font-bold px-4 py-2 rounded-full flex items-center gap-1.5"
+              style={{
+                background: panen.recovery.jenis === 'pakan' ? '#DBEAFE' : '#DCFCE7',
+                color: panen.recovery.jenis === 'pakan' ? '#1E40AF' : '#15803D'
+              }}
+            >
+              <span>{panen.recovery.jenis === 'pakan' ? '🐄' : '♻️'}</span>
+              <span>{panen.recovery.jenis === 'pakan' ? 'Pakan Ternak' : 'Kompos'}</span>
+            </span>
+          )}
         </div>
 
         {/* Petani Info */}
@@ -178,7 +214,45 @@ export default function DetailPanen() {
           </div>
         )}
 
+        {/* Delete Button - for owner only */}
+        {isOwner && (
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 mb-6"
+          >
+            <Icon icon="mdi:trash-can-outline" className="text-lg" />
+            Hapus Panen
+          </button>
+        )}
       </div>
+
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h3 className="text-lg font-bold text-gray-800 mb-2">Konfirmasi Hapus</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Yakin ingin menghapus hasil panen <strong>{panen.nama_komoditas}</strong>? Tindakan ini tidak dapat dibatalkan.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                disabled={deleting}
+                className="flex-1 bg-gray-300 hover:bg-gray-400 disabled:opacity-50 text-gray-700 font-bold py-2 rounded-lg transition-all"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-bold py-2 rounded-lg transition-all"
+              >
+                {deleting ? 'Menghapus...' : 'Hapus'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
