@@ -28,10 +28,12 @@ function parseProduk(pesan: string) {
       const doubleMatch = rawFoto.match(/https?:\/\/.+(https?:\/\/.+)/);
       if (doubleMatch) rawFoto = doubleMatch[1];
       
-      // Kalau localhost → pakai apa adanya (browser local bisa akses)
       // Kalau path relatif → prepend origin yang benar
-      if (!rawFoto.startsWith('http')) {
-        rawFoto = `${window.location.hostname === 'localhost' ? 'http://localhost:5000' : 'https://smart-harvest-production.up.railway.app'}${rawFoto}`;
+      if (rawFoto.startsWith('/uploads')) {
+        const origin = window.location.hostname === 'localhost' 
+          ? 'http://localhost:5000' 
+          : 'https://smart-harvest-production.up.railway.app';
+        rawFoto = `${origin}${rawFoto}`;
       }
       
       foto = rawFoto;
