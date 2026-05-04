@@ -24,6 +24,8 @@ import StatusPengirimanPedagang from "./pages/pedagang/StatusPengirimanPedagang"
 import DetailProduk from "./pages/pedagang/DetailProduk";
 import UbahKataSandi from "./pages/petani/UbahKataSandi";
 import PanduanKualitas from "./pages/petani/PanduanKualitas";
+import Monitoring from "./pages/admin/Monitoring";
+import KelolaPengguna from "./pages/admin/kelolapengguna";
 
 export default function App() {
   return (
@@ -56,6 +58,8 @@ export default function App() {
         path="/status-pengiriman-pedagang/:id"
         element={<StatusPengirimanPedagang />}
       />
+      <Route path="/monitoring" element={<Monitoring />} />
+      <Route path="/kelola-pengguna" element={<KelolaPengguna />} />
       <Route path="/panduan-kualitas" element={<PanduanKualitas />} />
     </Routes>
   );

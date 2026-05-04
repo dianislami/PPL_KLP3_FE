@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./kelolapengguna.css";
 
 export default function kelolapengguna() {
@@ -8,7 +9,7 @@ export default function kelolapengguna() {
   });
 
   return (
-    <div className="phone">
+    <div className="page">
       {/* HEADER */}
       <div className="header">
         <div>
@@ -76,8 +77,12 @@ export default function kelolapengguna() {
 
       {/* BOTTOM NAV */}
       <div className="bottom-nav">
-        <button className="nav-btn">Monitoring</button>
-        <button className="nav-btn active">Pengguna</button>
+        <Link to="/monitoring" className="nav-btn">
+          Monitoring
+        </Link>
+        <Link to="/kelola-pengguna" className="nav-btn active">
+          Pengguna
+        </Link>
       </div>
     </div>
   );

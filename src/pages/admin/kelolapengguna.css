@@ -4,14 +4,16 @@
   box-sizing: border-box;
 }
 
-.phone {
-  max-width: 390px;
-  margin: auto;
-  min-height: 100dvh;
+.page {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  min-height: 100vh;
   background: #f4f4f4;
   font-family: "Poppins", sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  padding: 24px;
 }
 
 
@@ -44,15 +46,18 @@
 }
 
 /* CARD */
-.card {
+.page .card {
+  width: 100%;
+  max-width: 100%;
   background: #cfd8a5;
   padding: 16px;
   border-radius: 25px;
 }
 
 /* STATS */
-.stats {
+.page .stats {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 10px 0;
 }
@@ -88,7 +93,8 @@
 /* HEADER TABLE */
 .thead {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 4fr 2fr 2fr 2fr;
+  column-gap: 20px;
   padding: 10px;
   font-weight: bold;
   border-bottom: 1px solid #999;
@@ -97,7 +103,8 @@
 /* ROW */
 .row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 4fr 2fr 2fr 2fr;
+  column-gap: 20px;
   padding: 10px;
   border-bottom: 1px solid #ccc;
   font-size: 13px;
@@ -123,11 +130,12 @@
 
 /* BOTTOM NAV */
 .bottom-nav {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
+  margin-top: 24px;
   background: black;
   border-radius: 30px;
   display: flex;
@@ -137,11 +145,15 @@
 
 .nav-btn {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: transparent;
   color: white;
   padding: 10px;
   border-radius: 20px;
+  text-align: center;
 }
 
 .nav-btn.active {

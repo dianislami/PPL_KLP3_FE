@@ -1,12 +1,13 @@
 import React from "react";
 import "./Monitoring.css";
+import { Link } from "react-router-dom";
 import {
   LineChart,
   Line,
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 
 interface StatCardProps {
@@ -36,7 +37,7 @@ const data = [
 
 const MonitoringPage: React.FC = () => {
   return (
-    <div className="phone">
+    <div className="page">
       {/* HEADER */}
       <div className="header">
         <div>
@@ -64,25 +65,29 @@ const MonitoringPage: React.FC = () => {
         <div className="chart-box">
           <h4>Tren Panen & Distribusi</h4>
 
-          <ResponsiveContainer width="100%" height={150}>
-            <LineChart data={data}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="panen"
-                stroke="#556B2F"
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="distribusi"
-                stroke="#8B0000"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <LineChart
+            width={720}
+            height={300}
+            data={data}
+            margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Line
+              type="monotone"
+              dataKey="panen"
+              stroke="#556B2F"
+              strokeWidth={2}
+            />
+            <Line
+              type="monotone"
+              dataKey="distribusi"
+              stroke="#8B0000"
+              strokeWidth={2}
+            />
+          </LineChart>
         </div>
 
         {/* FOOTER */}
@@ -93,8 +98,12 @@ const MonitoringPage: React.FC = () => {
 
       {/* BOTTOM NAV */}
       <div className="bottom-nav">
-        <button className="nav-btn active">Monitoring</button>
-        <button className="nav-btn">Pengguna</button>
+        <Link to="/monitoring" className="nav-btn active">
+          Monitoring
+        </Link>
+        <Link to="/kelola-pengguna" className="nav-btn">
+          Pengguna
+        </Link>
       </div>
     </div>
   );

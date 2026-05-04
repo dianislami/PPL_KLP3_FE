@@ -4,15 +4,16 @@
   box-sizing: border-box;
 }
 
-.phone {
-  max-width: 390px;
-  margin: auto;
-  min-height: 100dvh;
+.page {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  min-height: 100vh;
   background: #f4f4f4;
   font-family: "Poppins", sans-serif;
   position: relative;
-  overflow: hidden;
-  padding: 16px;
+  overflow-x: hidden;
+  padding: 24px 24px 100px 24px; /* Added bottom padding for bottom nav */
 }
 
 /* HEADER */
@@ -38,14 +39,27 @@
 }
 
 /* TITLE */
-.title {
-  margin: 15px 0;
+.page .title {
+  margin: 30px 0 20px 0; /* Increased top margin to 30px */
   font-size: 18px;
   font-weight: 600;
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: 1;
+  clear: both; /* Ensure it clears any floats */
 }
 
 /* CARD */
-.card {
+.page .card {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 420px;
+  min-width: 0 !important;
   background: #cfd8a5;
   padding: 16px;
   border-radius: 25px;
@@ -77,21 +91,44 @@
 }
 
 /* CHART */
-.chart-box {
+.page .chart-box {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: 360px;
+  min-height: 360px;
   background: #dfe8b9;
   border-radius: 15px;
   padding: 10px;
   margin-top: 10px;
+  overflow: visible;
+  position: relative;
 }
 
-.chart-box h4 {
+.page .chart-box > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+.page .chart-box svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.page .chart-box h4 {
   font-size: 12px;
   margin-bottom: 5px;
   color: #333;
 }
 
 /* Recharts tweak biar rapi */
-.recharts-wrapper {
+.page .recharts-responsive-container,
+.page .recharts-wrapper {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.page .recharts-wrapper {
   font-size: 10px;
 }
 
@@ -113,11 +150,12 @@
 
 /* BOTTOM NAV */
 .bottom-nav {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
+  margin-top: 24px;
   background: black;
   border-radius: 30px;
   display: flex;
@@ -127,12 +165,16 @@
 
 .nav-btn {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: transparent;
   color: white;
   padding: 10px;
   border-radius: 20px;
   font-size: 13px;
+  text-align: center;
 }
 
 .nav-btn.active {
