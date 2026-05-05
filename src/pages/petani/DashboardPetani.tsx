@@ -43,11 +43,12 @@ export default function DashboardPetani() {
   const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const displayLocation = user?.alamat || "Banda Aceh";
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const city = user?.alamat || "Banda Aceh";
+        const city = displayLocation;
 
         try {
           const response = await weatherAPI.get(city);
@@ -78,7 +79,7 @@ export default function DashboardPetani() {
     };
 
     if (user) fetchWeather();
-  }, [user]);
+  }, [user, displayLocation]);
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
@@ -163,9 +164,7 @@ export default function DashboardPetani() {
               <div>
                 {/* Pastikan lokasi tampil, jika tidak ada tampilkan alamat user atau Banda Aceh */}
                 <p className="font-semibold text-gray-800">
-                  {loading
-                    ? "Memuat..."
-                    : weather?.lokasi || user?.alamat || "Banda Aceh"}
+                  {loading ? "Memuat..." : displayLocation}
                 </p>
               </div>
             </div>
