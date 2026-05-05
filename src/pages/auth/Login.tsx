@@ -113,7 +113,7 @@ export default function Login() {
         <p className="text-sm text-gray-400 text-center mb-6">Masuk ke akun Anda</p>
 
         {/* User Type Selection — single pill container */}
-        <div className="flex items-center justify-around bg-[#eaf0d8] rounded-full px-2 py-2 mb-5">
+        <div className="flex items-center justify-between bg-[#eaf0d8] rounded-full px-2 py-2 mb-5">
           {[
             { id: 'pedagang', label: 'Pedagang', icon: 'mdi:storefront-outline' },
             { id: 'petani',   label: 'Petani',   icon: 'game-icons:farmer' },
@@ -122,7 +122,7 @@ export default function Login() {
             <button
               key={role.id}
               onClick={() => setUserType(role.id)}
-              className={`flex flex-col items-center gap-1 px-6 py-1 rounded-full transition-all ${
+              className={`flex flex-col items-center gap-1 px-8 py-1 rounded-full transition-all ${
                 userType === role.id
                   ? 'bg-white text-[#5a6e1a] shadow-sm'
                   : 'text-[#7a8c2e]'

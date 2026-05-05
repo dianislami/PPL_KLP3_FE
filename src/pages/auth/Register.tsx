@@ -122,7 +122,7 @@ export default function Register() {
         </p>
 
         {/* User Type Selection */}
-        <div className="flex items-center justify-around bg-[#eaf0d8] rounded-full px-2 py-2 mb-5">
+        <div className="flex items-center justify-between bg-[#eaf0d8] rounded-full px-2 py-2 mb-5">
           {[
             {
               id: "pedagang",
@@ -134,7 +134,7 @@ export default function Register() {
             <button
               key={role.id}
               onClick={() => setUserType(role.id)}
-              className={`flex flex-col items-center gap-1 px-10 py-1 rounded-full transition-all ${
+              className={`flex flex-col items-center gap-1 px-16 py-1 rounded-full transition-all ${
                 userType === role.id
                   ? "bg-white text-[#5a6e1a] shadow-sm"
                   : "text-[#7a8c2e]"
