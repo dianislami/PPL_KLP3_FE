@@ -36,14 +36,14 @@ export default function BottomNav({ role = 'petani' }: BottomNavProps) {
   };
 
   return (
-    <div className="fixed bottom-1 left-1 right-1 z-50 bg-black rounded-full px-2 py-2 flex justify-between items-center shadow-2xl pointer-events-auto">
+    <div className="fixed bottom-1 left-5 right-5 z-50 bg-black rounded-full px-2 py-2 flex justify-between items-center shadow-2xl pointer-events-auto">
       {navItems.map((item) => (
         <button
           key={item.id}
           onClick={() => handleNavigation(item.path)}
           className={`flex flex-col items-center gap-[0.01rem] transition-colors duration-200 ${
             isActive(item.path)
-              ? 'text-white bg-[#7a8c2e] rounded-3xl px-5 py-1'
+              ? 'text-white bg-[#7a8c2e] rounded-full px-12 py-2'
               : 'text-gray-400 bg-gray-700 rounded-full p-3 hover:text-white'
           }`}
         >

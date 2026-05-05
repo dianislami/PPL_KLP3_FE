@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { chatAPI, authAPI } from '../../services/api';
-// import { getImageUrl } from "../../services/api";
+import { chatAPI, authAPI, getImageUrl } from '../../services/api';
 
 interface Message {
   _id?: string;
@@ -28,15 +27,7 @@ function parseProduk(pesan: string) {
       const doubleMatch = rawFoto.match(/https?:\/\/.+(https?:\/\/.+)/);
       if (doubleMatch) rawFoto = doubleMatch[1];
       
-      // Kalau path relatif → prepend origin yang benar
-      if (rawFoto.startsWith('/uploads')) {
-        const origin = window.location.hostname === 'localhost' 
-          ? 'http://localhost:5000' 
-          : 'https://smart-harvest-production.up.railway.app';
-        rawFoto = `${origin}${rawFoto}`;
-      }
-      
-      foto = rawFoto;
+      foto = getImageUrl(rawFoto);
     }
 
     const nama = get('🌾');

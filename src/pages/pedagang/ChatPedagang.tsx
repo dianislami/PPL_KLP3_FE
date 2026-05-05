@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { chatAPI, authAPI } from '../../services/api';
-import { getBackendOrigin } from "../../services/api";
+import { chatAPI, authAPI, getImageUrl } from '../../services/api';
 
 interface Message {
   _id?: string;
@@ -29,15 +28,7 @@ function parseProduk(pesan: string) {
       const doubleMatch = rawFoto.match(/https?:\/\/.+(https?:\/\/.+)/);
       if (doubleMatch) rawFoto = doubleMatch[1];
       
-      // Kalau path relatif → prepend origin yang benar
-      if (rawFoto.startsWith('/uploads')) {
-        const origin = window.location.hostname === 'localhost' 
-          ? 'http://localhost:5000' 
-          : 'https://smart-harvest-production.up.railway.app';
-        rawFoto = `${origin}${rawFoto}`;
-      }
-      
-      foto = rawFoto;
+      foto = getImageUrl(rawFoto);
     }
 
     const nama     = get('🌾');
@@ -185,18 +176,13 @@ export default function ChatPedagang() {
       productSentRef.current = true;
       const p = locationState.produk;
       
-      // Build foto URL — handle berbagai format
       let fotoUrl = 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg';
       if (p.foto) {
         if (Array.isArray(p.foto) && p.foto.length > 0) {
           const foto0 = p.foto[0];
-          if (typeof foto0 === 'string') {
-            fotoUrl = `${getBackendOrigin()}${foto0}`;
-          } else if (foto0?.path) {
-            fotoUrl = `${getBackendOrigin()}${foto0.path}`;
-          }
+          fotoUrl = getImageUrl(typeof foto0 === 'string' ? foto0 : foto0?.path || '');
         } else if (typeof p.foto === 'string') {
-          fotoUrl = `${getBackendOrigin()}${p.foto}`;
+          fotoUrl = getImageUrl(p.foto);
         }
       }
       
