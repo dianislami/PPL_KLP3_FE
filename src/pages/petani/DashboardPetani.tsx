@@ -48,17 +48,23 @@ export default function DashboardPetani() {
     const fetchWeather = async () => {
       try {
         const city = user?.alamat || "Banda Aceh";
-        const response = await weatherAPI.get(city);
 
-        // Jika berhasil, simpan ke state
-        if (response.data) {
-          setWeather(response.data);
+        try {
+          const response = await weatherAPI.get(city);
+          if (response.data) {
+            setWeather(response.data);
+            return;
+          }
+        } catch {
+          const fallbackResponse = await weatherAPI.get("Banda Aceh");
+          if (fallbackResponse.data) {
+            setWeather(fallbackResponse.data);
+            return;
+          }
         }
       } catch (error) {
-        console.error("Weather error:", error);
-        // FALLBACK: Ambil lokasi dari profil user
         setWeather({
-          lokasi: user?.alamat || "Banda Aceh", 
+          lokasi: "Banda Aceh",
           suhu: "28",
           kelembapan: 80,
           angin: "1.5",
